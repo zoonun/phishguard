@@ -43,7 +43,9 @@ body::-webkit-scrollbar-thumb:hover {
 
 /* ===== Header ===== */
 .header {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 18px;
   padding-bottom: 14px;
   border-bottom: 1px solid #2a2a4a;
@@ -55,18 +57,32 @@ body::-webkit-scrollbar-thumb:hover {
   justify-content: center;
   gap: 8px;
   margin-bottom: 6px;
+  width: 100%;
 }
 
 .header__icon {
-  font-size: 22px;
-  line-height: 1;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
 }
 
 .header__title {
+  flex: 1;
   font-size: 20px;
   font-weight: 800;
   color: #a78bfa;
   letter-spacing: -0.3px;
+}
+
+.header__toggle-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #4ade80;
+  transition: color 0.25s ease;
+}
+
+.header__toggle-label--off {
+  color: #5a5a7a;
 }
 
 .header__domain {
@@ -118,6 +134,16 @@ body::-webkit-scrollbar-thumb:hover {
               stroke 0.4s ease;
 }
 
+.gauge__fill--analyzing {
+  animation: gaugeRotate 2s linear infinite;
+}
+
+@keyframes gaugeRotate {
+  0%   { stroke-dashoffset: 280; }
+  50%  { stroke-dashoffset: 180; }
+  100% { stroke-dashoffset: 280; }
+}
+
 .gauge__score {
   font-size: 32px;
   font-weight: 800;
@@ -154,6 +180,36 @@ body::-webkit-scrollbar-thumb:hover {
   color: #5a5a7a;
   padding: 16px 12px;
   font-size: 13px;
+}
+
+.results__loading {
+  text-align: center;
+  padding: 20px 12px;
+  color: #9999bb;
+  font-size: 13px;
+}
+
+.loading-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.loading-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #a78bfa;
+  animation: dotPulse 1.4s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotPulse {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1); }
 }
 
 /* ===== Result Card ===== */
@@ -246,6 +302,35 @@ body::-webkit-scrollbar-thumb:hover {
 .result-card--expanded .result-card__reason {
   max-height: 200px;
   padding: 0 14px 12px;
+}
+
+/* ===== AI Analysis Card ===== */
+.result-card--ai {
+  background: linear-gradient(135deg, #1e1b4b 0%, #22223a 100%);
+  border: 1px solid rgba(167, 139, 250, 0.25);
+}
+
+.result-card--ai:hover {
+  border-color: rgba(167, 139, 250, 0.5);
+  background: linear-gradient(135deg, #252060 0%, #2a2a50 100%);
+}
+
+.result-card--ai .result-card__name {
+  color: #c4b5fd;
+}
+
+.result-card--ai .result-card__ai-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.15);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: 4px;
+  padding: 1px 5px;
+  margin-left: 6px;
+  vertical-align: middle;
+  letter-spacing: 0.5px;
 }
 
 /* ===== Settings Panel ===== */
@@ -396,4 +481,181 @@ body::-webkit-scrollbar-thumb:hover {
   background: #2a2a50;
   border-color: #a78bfa;
   color: #a78bfa;
+}
+
+/* ===== LLM Status Chip ===== */
+.llm-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 5px 12px;
+  background: #16162b;
+  border: 1px dashed #3a3a5c;
+  border-radius: 16px;
+  color: #8888aa;
+  font-size: 11px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.llm-chip:hover {
+  border-color: #a78bfa;
+  color: #a78bfa;
+  background: #22223a;
+}
+
+.llm-chip--active {
+  border-style: solid;
+  border-color: #3a3a5c;
+  color: #d0d0e8;
+}
+
+.llm-chip--active:hover {
+  border-color: #a78bfa;
+  color: #a78bfa;
+}
+
+.llm-chip__icon {
+  display: flex;
+  align-items: center;
+  line-height: 0;
+}
+
+.llm-chip__text {
+  white-space: nowrap;
+}
+
+/* ===== Toggle Switch ===== */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle__slider {
+  position: absolute;
+  inset: 0;
+  background: #3a3a5c;
+  border-radius: 20px;
+  transition: background 0.25s ease;
+}
+
+.toggle__slider::before {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  left: 3px;
+  bottom: 3px;
+  background: #8888aa;
+  border-radius: 50%;
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.toggle input:checked + .toggle__slider {
+  background: #a78bfa;
+}
+
+.toggle input:checked + .toggle__slider::before {
+  transform: translateX(16px);
+  background: #fff;
+}
+
+/* ===== Settings Row ===== */
+.settings__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #2a2a4a;
+}
+
+.settings__row:last-of-type {
+  margin-bottom: 4px;
+}
+
+.settings__row-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #d0d0e8;
+}
+
+/* ===== LLM Settings Group ===== */
+#llm-settings-group {
+  transition: opacity 0.25s ease;
+}
+
+#llm-settings-group.llm-settings-group--hidden {
+  display: none;
+}
+
+/* ===== Disabled State ===== */
+.popup--disabled .main {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.popup--disabled .header__domain,
+.popup--disabled .llm-chip {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* ===== Model Picker ===== */
+.model-picker {
+  display: flex;
+  gap: 8px;
+}
+
+.model-picker__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  background: #16162b;
+  border: 2px solid #2a2a4a;
+  border-radius: 10px;
+  color: #8888aa;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.model-picker__item:hover {
+  background: #22223a;
+  border-color: #3a3a5c;
+  color: #d0d0e8;
+}
+
+.model-picker__item--selected {
+  border-color: #a78bfa;
+  color: #d0d0e8;
+  background: #22223a;
+}
+
+.model-picker__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.model-picker__name {
+  font-weight: 600;
+  font-size: 12px;
 }

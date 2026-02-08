@@ -15,20 +15,20 @@ const RiskBadge = {
     try {
       await chrome.action.setBadgeText({
         text: config.text,
-        tabId
+        tabId,
       });
 
       await chrome.action.setBadgeBackgroundColor({
         color: config.color,
-        tabId
+        tabId,
       });
 
       await chrome.action.setTitle({
         title: config.title,
-        tabId
+        tabId,
       });
     } catch (error) {
-      console.error('[PhishGuard:RiskBadge] Failed to update badge:', error);
+      console.error("[PhishGuard:RiskBadge] Failed to update badge:", error);
     }
   },
 
@@ -37,10 +37,13 @@ const RiskBadge = {
    */
   async clear(tabId) {
     try {
-      await chrome.action.setBadgeText({ text: '', tabId });
-      await chrome.action.setTitle({ title: 'PhishGuard - AI 피싱 감지', tabId });
+      await chrome.action.setBadgeText({ text: "", tabId });
+      await chrome.action.setTitle({
+        title: "PhishGuard - AI 피싱 감지",
+        tabId,
+      });
     } catch (error) {
-      console.error('[PhishGuard:RiskBadge] Failed to clear badge:', error);
+      console.error("[PhishGuard:RiskBadge] Failed to clear badge:", error);
     }
   },
 
@@ -49,42 +52,42 @@ const RiskBadge = {
    */
   async showLoading(tabId) {
     try {
-      await chrome.action.setBadgeText({ text: '...', tabId });
-      await chrome.action.setBadgeBackgroundColor({ color: '#6b7280', tabId });
-      await chrome.action.setTitle({ title: 'PhishGuard - 분석 중...', tabId });
+      await chrome.action.setBadgeText({ text: "...", tabId });
+      await chrome.action.setBadgeBackgroundColor({ color: "#6b7280", tabId });
+      await chrome.action.setTitle({ title: "PhishGuard - 분석 중...", tabId });
     } catch (error) {
-      console.error('[PhishGuard:RiskBadge] Failed to show loading:', error);
+      console.error("[PhishGuard:RiskBadge] Failed to show loading:", error);
     }
   },
 
   _getConfig(riskLevel, totalRisk) {
     switch (riskLevel) {
-      case 'danger':
+      case "danger":
         return {
           text: String(totalRisk),
-          color: '#dc2626',
-          title: `PhishGuard - 위험! (${totalRisk}/100)`
+          color: "#dc2626",
+          title: `PhishGuard - 위험! (${totalRisk}/100)`,
         };
-      case 'warning':
+      case "warning":
         return {
           text: String(totalRisk),
-          color: '#f59e0b',
-          title: `PhishGuard - 주의 (${totalRisk}/100)`
+          color: "#f59e0b",
+          title: `PhishGuard - 주의 (${totalRisk}/100)`,
         };
-      case 'safe':
+      case "safe":
         return {
-          text: '',
-          color: '#16a34a',
-          title: 'PhishGuard - 안전'
+          text: "✓",
+          color: "#16a34a",
+          title: `PhishGuard - 안전 (${totalRisk}/100)`,
         };
       default:
         return {
-          text: '',
-          color: '#6b7280',
-          title: 'PhishGuard - AI 피싱 감지'
+          text: "",
+          color: "#6b7280",
+          title: "PhishGuard - AI 피싱 감지",
         };
     }
-  }
+  },
 };
 
 export default RiskBadge;

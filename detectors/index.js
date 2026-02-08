@@ -133,8 +133,8 @@ const DetectorManager = {
   async _runLLMAnalysis(context, options) {
     const { previousResults, apiClient, prompts, ragContext, preliminaryScore } = options;
 
-    // 30~80점 사이일 때만 LLM 호출
-    if (preliminaryScore < 30 || preliminaryScore > 80) {
+    // 의미 있는 범위(20점 이상)일 때 LLM 호출
+    if (preliminaryScore < 20) {
       Logger.debug(`[DetectorManager] Skipping LLM (score: ${preliminaryScore})`);
       return null;
     }
