@@ -35,8 +35,6 @@ const PROVIDERS = {
 
   gemini: {
     name: "Gemini",
-    endpoint:
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent",
     buildHeaders() {
       return { "Content-Type": "application/json" };
     },
@@ -54,7 +52,7 @@ const PROVIDERS = {
       return response.candidates?.[0]?.content?.parts?.[0]?.text || "";
     },
     getEndpoint(apiKey) {
-      return `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+      return `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`;
     },
   },
 };
