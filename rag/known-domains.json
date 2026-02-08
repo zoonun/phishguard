@@ -1,0 +1,899 @@
+{
+  "version": "1.0.0",
+  "updatedAt": "2026-02-08",
+  "description": "PhishGuard known legitimate domains database for phishing detection",
+  "domains": [
+    {
+      "name": "네이버",
+      "primary": "naver.com",
+      "aliases": [
+        "naver.me",
+        "nid.naver.com",
+        "m.naver.com",
+        "mail.naver.com",
+        "search.naver.com",
+        "shopping.naver.com",
+        "pay.naver.com",
+        "login.naver.com",
+        "map.naver.com",
+        "news.naver.com",
+        "cafe.naver.com",
+        "blog.naver.com",
+        "tv.naver.com",
+        "comic.naver.com",
+        "finance.naver.com"
+      ],
+      "category": "portal",
+      "country": "KR"
+    },
+    {
+      "name": "다음",
+      "primary": "daum.net",
+      "aliases": [
+        "m.daum.net",
+        "mail.daum.net",
+        "search.daum.net",
+        "news.daum.net",
+        "cafe.daum.net",
+        "top.daum.net",
+        "map.daum.net"
+      ],
+      "category": "portal",
+      "country": "KR"
+    },
+    {
+      "name": "구글",
+      "primary": "google.com",
+      "aliases": [
+        "google.co.kr",
+        "accounts.google.com",
+        "mail.google.com",
+        "drive.google.com",
+        "docs.google.com",
+        "maps.google.com",
+        "play.google.com",
+        "news.google.com",
+        "translate.google.com",
+        "calendar.google.com",
+        "photos.google.com",
+        "meet.google.com",
+        "cloud.google.com",
+        "store.google.com",
+        "myaccount.google.com",
+        "www.googleapis.com"
+      ],
+      "category": "portal",
+      "country": "US"
+    },
+    {
+      "name": "야후",
+      "primary": "yahoo.com",
+      "aliases": [
+        "mail.yahoo.com",
+        "login.yahoo.com",
+        "finance.yahoo.com",
+        "news.yahoo.com",
+        "sports.yahoo.com",
+        "search.yahoo.com"
+      ],
+      "category": "portal",
+      "country": "US"
+    },
+    {
+      "name": "빙",
+      "primary": "bing.com",
+      "aliases": [
+        "www.bing.com",
+        "m.bing.com",
+        "cn.bing.com",
+        "login.microsoftonline.com"
+      ],
+      "category": "portal",
+      "country": "US"
+    },
+    {
+      "name": "카카오",
+      "primary": "kakao.com",
+      "aliases": [
+        "kakaocorp.com",
+        "accounts.kakao.com",
+        "auth.kakao.com",
+        "kauth.kakao.com",
+        "talk.kakao.com",
+        "story.kakao.com",
+        "map.kakao.com",
+        "m.kakao.com",
+        "developers.kakao.com",
+        "open.kakao.com"
+      ],
+      "category": "social",
+      "country": "KR"
+    },
+    {
+      "name": "카카오톡",
+      "primary": "kakaotalk.com",
+      "aliases": [
+        "m.kakaotalk.com",
+        "emoticon.kakao.com"
+      ],
+      "category": "social",
+      "country": "KR"
+    },
+    {
+      "name": "인스타그램",
+      "primary": "instagram.com",
+      "aliases": [
+        "www.instagram.com",
+        "m.instagram.com",
+        "about.instagram.com",
+        "help.instagram.com",
+        "i.instagram.com",
+        "graph.instagram.com"
+      ],
+      "category": "social",
+      "country": "US"
+    },
+    {
+      "name": "페이스북",
+      "primary": "facebook.com",
+      "aliases": [
+        "www.facebook.com",
+        "m.facebook.com",
+        "web.facebook.com",
+        "ko-kr.facebook.com",
+        "developers.facebook.com",
+        "business.facebook.com",
+        "fb.com",
+        "fb.me",
+        "messenger.com",
+        "www.messenger.com"
+      ],
+      "category": "social",
+      "country": "US"
+    },
+    {
+      "name": "메타",
+      "primary": "meta.com",
+      "aliases": [
+        "about.meta.com",
+        "transparency.meta.com"
+      ],
+      "category": "social",
+      "country": "US"
+    },
+    {
+      "name": "트위터/X",
+      "primary": "x.com",
+      "aliases": [
+        "twitter.com",
+        "www.twitter.com",
+        "mobile.twitter.com",
+        "api.twitter.com",
+        "t.co",
+        "abs.twimg.com",
+        "pbs.twimg.com"
+      ],
+      "category": "social",
+      "country": "US"
+    },
+    {
+      "name": "유튜브",
+      "primary": "youtube.com",
+      "aliases": [
+        "www.youtube.com",
+        "m.youtube.com",
+        "music.youtube.com",
+        "studio.youtube.com",
+        "tv.youtube.com",
+        "youtu.be",
+        "accounts.youtube.com",
+        "gaming.youtube.com"
+      ],
+      "category": "social",
+      "country": "US"
+    },
+    {
+      "name": "틱톡",
+      "primary": "tiktok.com",
+      "aliases": [
+        "www.tiktok.com",
+        "m.tiktok.com",
+        "vm.tiktok.com",
+        "ads.tiktok.com",
+        "business.tiktok.com"
+      ],
+      "category": "social",
+      "country": "CN"
+    },
+    {
+      "name": "네이버 블로그",
+      "primary": "blog.naver.com",
+      "aliases": [
+        "m.blog.naver.com",
+        "section.blog.naver.com"
+      ],
+      "category": "social",
+      "country": "KR"
+    },
+    {
+      "name": "카카오스토리",
+      "primary": "story.kakao.com",
+      "aliases": [
+        "m.story.kakao.com"
+      ],
+      "category": "social",
+      "country": "KR"
+    },
+    {
+      "name": "라인",
+      "primary": "line.me",
+      "aliases": [
+        "store.line.me",
+        "access.line.me",
+        "liff.line.me",
+        "manager.line.biz",
+        "developers.line.biz",
+        "official.line.me"
+      ],
+      "category": "social",
+      "country": "JP"
+    },
+    {
+      "name": "링크드인",
+      "primary": "linkedin.com",
+      "aliases": [
+        "www.linkedin.com",
+        "m.linkedin.com",
+        "business.linkedin.com",
+        "learning.linkedin.com",
+        "lnkd.in"
+      ],
+      "category": "social",
+      "country": "US"
+    },
+    {
+      "name": "레딧",
+      "primary": "reddit.com",
+      "aliases": [
+        "www.reddit.com",
+        "old.reddit.com",
+        "new.reddit.com",
+        "m.reddit.com",
+        "i.redd.it",
+        "v.redd.it",
+        "redd.it"
+      ],
+      "category": "social",
+      "country": "US"
+    },
+    {
+      "name": "국민은행",
+      "primary": "kbstar.com",
+      "aliases": [
+        "www.kbstar.com",
+        "obank.kbstar.com",
+        "m.kbstar.com",
+        "card.kbcard.com",
+        "kbcard.com",
+        "m.kbcard.com"
+      ],
+      "category": "banking",
+      "country": "KR"
+    },
+    {
+      "name": "신한은행",
+      "primary": "shinhan.com",
+      "aliases": [
+        "www.shinhan.com",
+        "bank.shinhan.com",
+        "m.shinhan.com",
+        "sol.shinhan.com",
+        "shinhancard.com",
+        "www.shinhancard.com",
+        "m.shinhancard.com"
+      ],
+      "category": "banking",
+      "country": "KR"
+    },
+    {
+      "name": "우리은행",
+      "primary": "wooribank.com",
+      "aliases": [
+        "www.wooribank.com",
+        "m.wooribank.com",
+        "spot.wooribank.com",
+        "sbank.wooribank.com",
+        "wooricard.com",
+        "www.wooricard.com"
+      ],
+      "category": "banking",
+      "country": "KR"
+    },
+    {
+      "name": "하나은행",
+      "primary": "hanabank.com",
+      "aliases": [
+        "www.hanabank.com",
+        "m.hanabank.com",
+        "open.hanabank.com",
+        "hanacard.co.kr",
+        "www.hanacard.co.kr"
+      ],
+      "category": "banking",
+      "country": "KR"
+    },
+    {
+      "name": "농협은행",
+      "primary": "nonghyup.com",
+      "aliases": [
+        "www.nonghyup.com",
+        "banking.nonghyup.com",
+        "m.nonghyup.com",
+        "card.nonghyup.com",
+        "nhbank.com",
+        "m.nhbank.com"
+      ],
+      "category": "banking",
+      "country": "KR"
+    },
+    {
+      "name": "카카오뱅크",
+      "primary": "kakaobank.com",
+      "aliases": [
+        "www.kakaobank.com",
+        "m.kakaobank.com",
+        "auth.kakaobank.com"
+      ],
+      "category": "banking",
+      "country": "KR"
+    },
+    {
+      "name": "토스",
+      "primary": "toss.im",
+      "aliases": [
+        "www.toss.im",
+        "m.toss.im",
+        "app.toss.im",
+        "auth.toss.im",
+        "pay.toss.im",
+        "tossbank.com",
+        "www.tossbank.com",
+        "tossinvest.com",
+        "tosspayments.com"
+      ],
+      "category": "banking",
+      "country": "KR"
+    },
+    {
+      "name": "IBK기업은행",
+      "primary": "ibk.co.kr",
+      "aliases": [
+        "www.ibk.co.kr",
+        "m.ibk.co.kr",
+        "mybank.ibk.co.kr",
+        "open.ibk.co.kr",
+        "ibkcard.co.kr"
+      ],
+      "category": "banking",
+      "country": "KR"
+    },
+    {
+      "name": "SC제일은행",
+      "primary": "sc.co.kr",
+      "aliases": [
+        "www.sc.co.kr",
+        "m.sc.co.kr",
+        "banking.sc.co.kr"
+      ],
+      "category": "banking",
+      "country": "KR"
+    },
+    {
+      "name": "씨티은행",
+      "primary": "citibank.co.kr",
+      "aliases": [
+        "www.citibank.co.kr",
+        "m.citibank.co.kr"
+      ],
+      "category": "banking",
+      "country": "KR"
+    },
+    {
+      "name": "우체국은행",
+      "primary": "epostbank.go.kr",
+      "aliases": [
+        "www.epostbank.go.kr",
+        "m.epostbank.go.kr"
+      ],
+      "category": "banking",
+      "country": "KR"
+    },
+    {
+      "name": "쿠팡",
+      "primary": "coupang.com",
+      "aliases": [
+        "www.coupang.com",
+        "m.coupang.com",
+        "login.coupang.com",
+        "member.coupang.com",
+        "partners.coupang.com",
+        "coupangplay.com"
+      ],
+      "category": "ecommerce",
+      "country": "KR"
+    },
+    {
+      "name": "11번가",
+      "primary": "11st.co.kr",
+      "aliases": [
+        "www.11st.co.kr",
+        "m.11st.co.kr",
+        "buy.11st.co.kr",
+        "login.11st.co.kr",
+        "search.11st.co.kr"
+      ],
+      "category": "ecommerce",
+      "country": "KR"
+    },
+    {
+      "name": "G마켓",
+      "primary": "gmarket.co.kr",
+      "aliases": [
+        "www.gmarket.co.kr",
+        "m.gmarket.co.kr",
+        "item.gmarket.co.kr",
+        "signin.gmarket.co.kr"
+      ],
+      "category": "ecommerce",
+      "country": "KR"
+    },
+    {
+      "name": "옥션",
+      "primary": "auction.co.kr",
+      "aliases": [
+        "www.auction.co.kr",
+        "m.auction.co.kr",
+        "itempage.auction.co.kr",
+        "signin.auction.co.kr"
+      ],
+      "category": "ecommerce",
+      "country": "KR"
+    },
+    {
+      "name": "위메프",
+      "primary": "wemakeprice.com",
+      "aliases": [
+        "www.wemakeprice.com",
+        "m.wemakeprice.com",
+        "front.wemakeprice.com",
+        "mfront.wemakeprice.com"
+      ],
+      "category": "ecommerce",
+      "country": "KR"
+    },
+    {
+      "name": "티몬",
+      "primary": "tmon.co.kr",
+      "aliases": [
+        "www.tmon.co.kr",
+        "m.tmon.co.kr",
+        "login.tmon.co.kr"
+      ],
+      "category": "ecommerce",
+      "country": "KR"
+    },
+    {
+      "name": "SSG닷컴",
+      "primary": "ssg.com",
+      "aliases": [
+        "www.ssg.com",
+        "m.ssg.com",
+        "shinsegaemall.ssg.com",
+        "emart.ssg.com"
+      ],
+      "category": "ecommerce",
+      "country": "KR"
+    },
+    {
+      "name": "아마존",
+      "primary": "amazon.com",
+      "aliases": [
+        "www.amazon.com",
+        "smile.amazon.com",
+        "aws.amazon.com",
+        "prime.amazon.com",
+        "music.amazon.com",
+        "kindle.amazon.com",
+        "amazon.co.jp",
+        "amazon.co.uk",
+        "amazon.de",
+        "amzn.to",
+        "a.co"
+      ],
+      "category": "ecommerce",
+      "country": "US"
+    },
+    {
+      "name": "이베이",
+      "primary": "ebay.com",
+      "aliases": [
+        "www.ebay.com",
+        "m.ebay.com",
+        "signin.ebay.com",
+        "pages.ebay.com",
+        "ebay.co.uk",
+        "ebay.de"
+      ],
+      "category": "ecommerce",
+      "country": "US"
+    },
+    {
+      "name": "알리익스프레스",
+      "primary": "aliexpress.com",
+      "aliases": [
+        "www.aliexpress.com",
+        "m.aliexpress.com",
+        "ko.aliexpress.com",
+        "login.aliexpress.com",
+        "best.aliexpress.com"
+      ],
+      "category": "ecommerce",
+      "country": "CN"
+    },
+    {
+      "name": "정부24",
+      "primary": "gov.kr",
+      "aliases": [
+        "www.gov.kr",
+        "m.gov.kr",
+        "www.government.kr",
+        "minwon.go.kr"
+      ],
+      "category": "government",
+      "country": "KR"
+    },
+    {
+      "name": "국세청",
+      "primary": "nts.go.kr",
+      "aliases": [
+        "www.nts.go.kr",
+        "m.nts.go.kr",
+        "hometax.go.kr",
+        "www.hometax.go.kr",
+        "m.hometax.go.kr",
+        "teht.hometax.go.kr"
+      ],
+      "category": "government",
+      "country": "KR"
+    },
+    {
+      "name": "국민건강보험공단",
+      "primary": "nhis.or.kr",
+      "aliases": [
+        "www.nhis.or.kr",
+        "m.nhis.or.kr",
+        "nh.nhis.or.kr",
+        "minwon.nhis.or.kr"
+      ],
+      "category": "government",
+      "country": "KR"
+    },
+    {
+      "name": "국민연금공단",
+      "primary": "nps.or.kr",
+      "aliases": [
+        "www.nps.or.kr",
+        "m.nps.or.kr",
+        "minwon.nps.or.kr",
+        "csa.nps.or.kr"
+      ],
+      "category": "government",
+      "country": "KR"
+    },
+    {
+      "name": "대한민국 법원",
+      "primary": "scourt.go.kr",
+      "aliases": [
+        "www.scourt.go.kr",
+        "m.scourt.go.kr",
+        "efiling.scourt.go.kr",
+        "ecfs.scourt.go.kr"
+      ],
+      "category": "government",
+      "country": "KR"
+    },
+    {
+      "name": "Apple",
+      "primary": "apple.com",
+      "aliases": [
+        "www.apple.com",
+        "store.apple.com",
+        "support.apple.com",
+        "developer.apple.com",
+        "appleid.apple.com",
+        "icloud.com",
+        "www.icloud.com",
+        "itunes.apple.com",
+        "music.apple.com",
+        "tv.apple.com",
+        "maps.apple.com",
+        "mapsconnect.apple.com"
+      ],
+      "category": "global",
+      "country": "US"
+    },
+    {
+      "name": "Microsoft",
+      "primary": "microsoft.com",
+      "aliases": [
+        "www.microsoft.com",
+        "login.microsoftonline.com",
+        "account.microsoft.com",
+        "live.com",
+        "login.live.com",
+        "outlook.com",
+        "outlook.live.com",
+        "office.com",
+        "office365.com",
+        "onedrive.live.com",
+        "teams.microsoft.com",
+        "azure.microsoft.com",
+        "portal.azure.com",
+        "dev.azure.com",
+        "visualstudio.com",
+        "msn.com"
+      ],
+      "category": "global",
+      "country": "US"
+    },
+    {
+      "name": "PayPal",
+      "primary": "paypal.com",
+      "aliases": [
+        "www.paypal.com",
+        "m.paypal.com",
+        "paypal.me",
+        "developer.paypal.com",
+        "business.paypal.com"
+      ],
+      "category": "global",
+      "country": "US"
+    },
+    {
+      "name": "Netflix",
+      "primary": "netflix.com",
+      "aliases": [
+        "www.netflix.com",
+        "m.netflix.com",
+        "help.netflix.com",
+        "jobs.netflix.com",
+        "about.netflix.com"
+      ],
+      "category": "global",
+      "country": "US"
+    },
+    {
+      "name": "Dropbox",
+      "primary": "dropbox.com",
+      "aliases": [
+        "www.dropbox.com",
+        "m.dropbox.com",
+        "paper.dropbox.com",
+        "dl.dropboxusercontent.com",
+        "content.dropboxapi.com"
+      ],
+      "category": "global",
+      "country": "US"
+    },
+    {
+      "name": "GitHub",
+      "primary": "github.com",
+      "aliases": [
+        "www.github.com",
+        "gist.github.com",
+        "api.github.com",
+        "pages.github.com",
+        "raw.githubusercontent.com",
+        "github.io",
+        "github.dev",
+        "copilot.github.com"
+      ],
+      "category": "global",
+      "country": "US"
+    },
+    {
+      "name": "Slack",
+      "primary": "slack.com",
+      "aliases": [
+        "www.slack.com",
+        "app.slack.com",
+        "api.slack.com",
+        "files.slack.com",
+        "hooks.slack.com"
+      ],
+      "category": "global",
+      "country": "US"
+    },
+    {
+      "name": "Zoom",
+      "primary": "zoom.us",
+      "aliases": [
+        "www.zoom.us",
+        "us02web.zoom.us",
+        "us04web.zoom.us",
+        "us05web.zoom.us",
+        "us06web.zoom.us",
+        "support.zoom.us",
+        "marketplace.zoom.us",
+        "zoom.com"
+      ],
+      "category": "global",
+      "country": "US"
+    },
+    {
+      "name": "SKT",
+      "primary": "skt.com",
+      "aliases": [
+        "www.skt.com",
+        "m.skt.com",
+        "tworld.sktelecom.com",
+        "m.tworld.sktelecom.com",
+        "id.skt.com",
+        "sktelecom.com"
+      ],
+      "category": "telecom",
+      "country": "KR"
+    },
+    {
+      "name": "KT",
+      "primary": "kt.com",
+      "aliases": [
+        "www.kt.com",
+        "m.kt.com",
+        "shop.kt.com",
+        "my.kt.com",
+        "product.kt.com",
+        "auth.kt.com"
+      ],
+      "category": "telecom",
+      "country": "KR"
+    },
+    {
+      "name": "LG유플러스",
+      "primary": "lguplus.com",
+      "aliases": [
+        "www.lguplus.com",
+        "m.lguplus.com",
+        "login.lguplus.com",
+        "shop.lguplus.com",
+        "members.lguplus.com"
+      ],
+      "category": "telecom",
+      "country": "KR"
+    },
+    {
+      "name": "네이버페이",
+      "primary": "pay.naver.com",
+      "aliases": [
+        "m.pay.naver.com",
+        "order.pay.naver.com",
+        "admin.pay.naver.com"
+      ],
+      "category": "fintech",
+      "country": "KR"
+    },
+    {
+      "name": "카카오페이",
+      "primary": "kakaopay.com",
+      "aliases": [
+        "www.kakaopay.com",
+        "m.kakaopay.com",
+        "pg.kakaopay.com",
+        "biz.kakaopay.com"
+      ],
+      "category": "fintech",
+      "country": "KR"
+    },
+    {
+      "name": "삼성전자",
+      "primary": "samsung.com",
+      "aliases": [
+        "www.samsung.com",
+        "m.samsung.com",
+        "account.samsung.com",
+        "galaxystore.samsung.com",
+        "samsungknox.com",
+        "samsungmembers.com",
+        "samsung.co.kr"
+      ],
+      "category": "global",
+      "country": "KR"
+    },
+    {
+      "name": "배달의민족",
+      "primary": "baemin.com",
+      "aliases": [
+        "www.baemin.com",
+        "m.baemin.com",
+        "ceo.baemin.com",
+        "baeminfamily.com"
+      ],
+      "category": "ecommerce",
+      "country": "KR"
+    },
+    {
+      "name": "당근마켓",
+      "primary": "daangn.com",
+      "aliases": [
+        "www.daangn.com",
+        "m.daangn.com",
+        "karrotmarket.com",
+        "about.daangn.com"
+      ],
+      "category": "ecommerce",
+      "country": "KR"
+    },
+    {
+      "name": "무신사",
+      "primary": "musinsa.com",
+      "aliases": [
+        "www.musinsa.com",
+        "m.musinsa.com",
+        "store.musinsa.com",
+        "login.musinsa.com"
+      ],
+      "category": "ecommerce",
+      "country": "KR"
+    },
+    {
+      "name": "Spotify",
+      "primary": "spotify.com",
+      "aliases": [
+        "www.spotify.com",
+        "open.spotify.com",
+        "accounts.spotify.com",
+        "artists.spotify.com",
+        "developer.spotify.com"
+      ],
+      "category": "global",
+      "country": "SE"
+    },
+    {
+      "name": "Notion",
+      "primary": "notion.so",
+      "aliases": [
+        "www.notion.so",
+        "api.notion.com",
+        "notion.com"
+      ],
+      "category": "global",
+      "country": "US"
+    },
+    {
+      "name": "Discord",
+      "primary": "discord.com",
+      "aliases": [
+        "www.discord.com",
+        "support.discord.com",
+        "discordapp.com",
+        "cdn.discordapp.com",
+        "discord.gg"
+      ],
+      "category": "social",
+      "country": "US"
+    },
+    {
+      "name": "WhatsApp",
+      "primary": "whatsapp.com",
+      "aliases": [
+        "www.whatsapp.com",
+        "web.whatsapp.com",
+        "faq.whatsapp.com",
+        "chat.whatsapp.com",
+        "wa.me"
+      ],
+      "category": "social",
+      "country": "US"
+    }
+  ]
+}

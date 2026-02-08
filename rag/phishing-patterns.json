@@ -1,0 +1,448 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-02-08",
+  "description": "PhishGuard Chrome Extension - 피싱 탐지 패턴 데이터베이스",
+  "patterns": [
+    {
+      "id": "pattern_001",
+      "type": "url_pattern",
+      "pattern": "login.*verify.*account",
+      "description": "로그인 인증을 가장한 URL 경로 패턴. 사용자에게 계정 확인을 유도하여 자격 증명을 탈취하려는 시도.",
+      "risk_weight": 0.7,
+      "examples": ["/login/verify-account", "/user/login-verification", "/auth/verify-your-account"]
+    },
+    {
+      "id": "pattern_002",
+      "type": "url_pattern",
+      "pattern": "password[_-]?reset|reset[_-]?password|recover[_-]?account",
+      "description": "비밀번호 재설정 또는 계정 복구를 가장한 URL 패턴. 정상적인 비밀번호 재설정 흐름을 모방하여 현재 비밀번호를 수집.",
+      "risk_weight": 0.75,
+      "examples": ["/password-reset/confirm", "/reset_password/token", "/recover-account/step1"]
+    },
+    {
+      "id": "pattern_003",
+      "type": "url_pattern",
+      "pattern": "payment.*confirm|billing.*update|invoice.*view",
+      "description": "결제 확인 또는 청구서 조회를 가장한 URL 패턴. 결제 정보 입력을 유도하여 금융 정보를 탈취.",
+      "risk_weight": 0.85,
+      "examples": ["/payment/confirm-order", "/billing/update-method", "/invoice/view-details?id=fake"]
+    },
+    {
+      "id": "pattern_004",
+      "type": "url_pattern",
+      "pattern": "security[_-]?check|security[_-]?alert|security[_-]?update",
+      "description": "보안 점검 또는 보안 경고를 가장한 URL 패턴. 긴급한 보안 조치가 필요한 것처럼 위장하여 개인정보 입력을 유도.",
+      "risk_weight": 0.8,
+      "examples": ["/security-check/required", "/security_alert/action-needed", "/security-update/verify"]
+    },
+    {
+      "id": "pattern_005",
+      "type": "url_pattern",
+      "pattern": "signin.*redirect|oauth.*callback.*[?&].*token",
+      "description": "OAuth 인증 콜백을 가장한 URL 패턴. 정상적인 SSO 로그인 흐름을 모방하여 세션 토큰 또는 자격 증명을 가로채려는 시도.",
+      "risk_weight": 0.8,
+      "examples": ["/signin/redirect?next=steal", "/oauth/callback?token=fake&redirect=evil.com"]
+    },
+    {
+      "id": "pattern_006",
+      "type": "url_pattern",
+      "pattern": "account.*suspend|account.*locked|account.*restrict",
+      "description": "계정 정지 또는 제한 알림을 가장한 URL 패턴. 계정이 정지되었다는 공포심을 유발하여 즉각적인 행동을 유도.",
+      "risk_weight": 0.8,
+      "examples": ["/account/suspended/reactivate", "/account-locked/verify", "/account/restricted/appeal"]
+    },
+    {
+      "id": "pattern_007",
+      "type": "url_pattern",
+      "pattern": "delivery.*track|shipping.*confirm|package.*notify",
+      "description": "택배 배송 추적 또는 배송 확인을 가장한 URL 패턴. 배송 조회를 미끼로 개인정보 입력 페이지로 유도.",
+      "risk_weight": 0.65,
+      "examples": ["/delivery/track-package?id=fake", "/shipping/confirm-address", "/package/notify/redelivery"]
+    },
+    {
+      "id": "pattern_008",
+      "type": "domain_pattern",
+      "pattern": "subdomain_brand_impersonation",
+      "description": "서브도메인에 유명 브랜드명을 포함하고 알 수 없는 TLD를 사용하는 패턴 (예: naver.evil-domain.com, google.security-check.xyz). 사용자가 주소창에서 브랜드명만 확인하고 신뢰하는 심리를 악용.",
+      "risk_weight": 0.9,
+      "detection_rule": "서브도메인에 알려진 브랜드명이 포함되어 있으나 실제 도메인이 해당 브랜드의 공식 도메인과 불일치",
+      "examples": ["naver.account-verify.com", "kakao.security-alert.xyz", "google.login-check.net"]
+    },
+    {
+      "id": "pattern_009",
+      "type": "domain_pattern",
+      "pattern": "similar_tld_substitution",
+      "description": "공식 도메인과 유사하지만 TLD만 변경한 패턴 (예: naver.co → naver.cc, google.com → google.cm). 시각적으로 구분하기 어려운 TLD를 사용하여 사용자를 속이는 타이포스쿼팅 기법.",
+      "risk_weight": 0.85,
+      "detection_rule": "알려진 브랜드의 도메인명과 일치하나 TLD가 .cc, .cm, .co, .tk, .ml, .ga, .cf 등 비공식 TLD",
+      "examples": ["naver.cc", "daum.cf", "google.cm", "samsung.tk"]
+    },
+    {
+      "id": "pattern_010",
+      "type": "domain_pattern",
+      "pattern": "ip_address_url",
+      "description": "도메인 대신 IP 주소를 직접 사용하는 URL 패턴. 정상적인 서비스는 IP 주소로 직접 접근하도록 안내하지 않으며, 피싱 사이트가 도메인 등록 없이 빠르게 배포될 때 흔히 사용됨.",
+      "risk_weight": 0.85,
+      "detection_rule": "URL의 호스트 부분이 IPv4(xxx.xxx.xxx.xxx) 또는 IPv6 형태의 IP 주소",
+      "examples": ["http://192.168.1.100/login", "http://45.33.32.156/naver/login", "http://[2001:db8::1]/verify"]
+    },
+    {
+      "id": "pattern_011",
+      "type": "domain_pattern",
+      "pattern": "free_hosting_domain",
+      "description": "무료 호스팅 또는 무료 도메인 서비스를 이용한 피싱 사이트 패턴. 공격자가 비용 없이 빠르게 피싱 페이지를 배포하기 위해 사용.",
+      "risk_weight": 0.7,
+      "detection_rule": "도메인이 알려진 무료 호스팅 서비스(*.000webhostapp.com, *.netlify.app, *.herokuapp.com, *.firebaseapp.com, *.web.app, *.pages.dev, *.vercel.app, *.glitch.me, *.repl.co) 하위에 위치",
+      "examples": ["naver-login.000webhostapp.com", "kakao-verify.netlify.app", "google-security.web.app"]
+    },
+    {
+      "id": "pattern_012",
+      "type": "domain_pattern",
+      "pattern": "excessive_subdomain_depth",
+      "description": "과도하게 많은 서브도메인 레벨을 사용하는 패턴. 주소창에서 실제 도메인을 파악하기 어렵게 만들어 사용자를 혼동시키는 기법.",
+      "risk_weight": 0.75,
+      "detection_rule": "서브도메인 깊이가 3단계 이상 (예: a.b.c.d.evil.com)",
+      "examples": ["secure.login.naver.com.verify.evil-domain.com", "www.accounts.google.com.auth.phish.xyz"]
+    },
+    {
+      "id": "pattern_013",
+      "type": "domain_pattern",
+      "pattern": "numeric_domain_name",
+      "description": "의미 없는 숫자 또는 숫자와 문자가 무작위로 조합된 도메인 패턴. 자동 생성된 도메인으로 대량 피싱 캠페인에서 흔히 관찰됨.",
+      "risk_weight": 0.7,
+      "detection_rule": "도메인명의 50% 이상이 숫자로 구성되거나 무작위 문자열 패턴",
+      "examples": ["38291847.com", "abc123xyz456.net", "n4v3r-login.com"]
+    },
+    {
+      "id": "pattern_014",
+      "type": "domain_pattern",
+      "pattern": "homograph_attack",
+      "description": "유니코드 호모그래프 공격 패턴. 시각적으로 동일하게 보이는 다른 문자셋(키릴, 그리스 문자 등)을 사용하여 정상 도메인으로 위장. 예: 'а'(키릴) vs 'a'(라틴).",
+      "risk_weight": 0.95,
+      "detection_rule": "도메인에 비ASCII 문자 또는 퓨니코드(xn--) 접두어가 포함된 경우",
+      "examples": ["xn--nver-k0a.com (nаver.com - 키릴 а 사용)", "xn--gogle-5qf.com"]
+    },
+    {
+      "id": "pattern_015",
+      "type": "domain_pattern",
+      "pattern": "url_shortener_redirect",
+      "description": "URL 단축 서비스를 통해 실제 피싱 URL을 숨기는 패턴. 최종 목적지를 확인하기 전까지 사용자가 피싱 사이트 여부를 판단할 수 없음.",
+      "risk_weight": 0.6,
+      "detection_rule": "bit.ly, tinyurl.com, t.co, goo.gl, is.gd, v.gd, han.gl, me2.do, vo.la 등 URL 단축 서비스 도메인 사용",
+      "examples": ["bit.ly/3xFakeLogin", "tinyurl.com/naver-verify", "han.gl/phish123"]
+    },
+    {
+      "id": "pattern_016",
+      "type": "content_pattern",
+      "pattern": "fake_login_form",
+      "description": "정상 서비스의 로그인 폼을 정교하게 모방한 가짜 로그인 폼. 실제 서비스의 CSS, 로고, 레이아웃을 복제하지만 form action이 외부 서버를 가리킴.",
+      "risk_weight": 0.9,
+      "detection_rule": "페이지 내 <form> 태그의 action 속성이 현재 도메인과 다른 외부 URL을 가리키거나, 입력값을 외부로 전송하는 JavaScript가 존재",
+      "indicators": ["form action이 외부 도메인", "input type=password 존재", "자격 증명 전송 스크립트", "브랜드 로고 이미지 포함"]
+    },
+    {
+      "id": "pattern_017",
+      "type": "content_pattern",
+      "pattern": "urgency_message_display",
+      "description": "긴급성을 강조하는 경고 메시지를 표시하여 사용자의 판단력을 흐리게 하는 패턴. 카운트다운 타이머, 빨간색 경고문, 느낌표 남용 등으로 즉각적인 행동을 유도.",
+      "risk_weight": 0.75,
+      "detection_rule": "페이지 내 카운트다운 타이머 스크립트, 긴급 키워드 다수 포함, 경고 아이콘 반복 사용",
+      "indicators": ["countdown timer", "빨간색/주황색 경고 배너", "느낌표 3개 이상 연속 사용", "긴급/즉시/지금 등 시간 압박 키워드"]
+    },
+    {
+      "id": "pattern_018",
+      "type": "content_pattern",
+      "pattern": "brand_logo_misuse",
+      "description": "유명 브랜드의 로고나 CI를 무단 사용하여 신뢰감을 조성하는 패턴. 로고 이미지를 외부에서 직접 로드하거나 저품질로 복제하여 사용.",
+      "risk_weight": 0.7,
+      "detection_rule": "페이지 내 이미지가 알려진 브랜드 로고와 유사하지만, 해당 브랜드의 공식 도메인이 아닌 곳에서 호스팅",
+      "indicators": ["브랜드 로고 이미지 포함", "로고 해상도 불일치", "외부 이미지 서버에서 로고 로드", "여러 브랜드 로고 동시 표시"]
+    },
+    {
+      "id": "pattern_019",
+      "type": "content_pattern",
+      "pattern": "hidden_iframe_overlay",
+      "description": "숨겨진 iframe을 사용하여 사용자 입력을 가로채는 패턴. 투명한 iframe을 정상 페이지 위에 오버레이하여 클릭재킹 또는 키 입력 탈취를 수행.",
+      "risk_weight": 0.9,
+      "detection_rule": "opacity:0 또는 visibility:hidden인 iframe이 존재하거나, iframe이 페이지 전체를 덮는 position:absolute/fixed 스타일 적용",
+      "indicators": ["투명 iframe 존재", "z-index가 극단적으로 높은 요소", "pointer-events 조작", "iframe sandbox 미적용"]
+    },
+    {
+      "id": "pattern_020",
+      "type": "content_pattern",
+      "pattern": "malicious_redirect_script",
+      "description": "JavaScript를 통한 악성 리다이렉트 패턴. 페이지 로드 시 자동으로 피싱 사이트로 리다이렉트하거나, 특정 조건(모바일, 특정 국가 등)에서만 리다이렉트 실행.",
+      "risk_weight": 0.85,
+      "detection_rule": "window.location, document.location, meta refresh 등을 통한 외부 도메인으로의 즉시 리다이렉트",
+      "indicators": ["window.location.href 변경", "meta http-equiv=refresh", "setTimeout + redirect", "조건부 리다이렉트 로직"]
+    },
+    {
+      "id": "pattern_021",
+      "type": "content_pattern",
+      "pattern": "data_exfiltration_form",
+      "description": "과도한 개인정보를 한 번에 수집하려는 폼 패턴. 정상 서비스에서는 요구하지 않는 수준의 개인정보(주민번호, 카드 전체번호, CVV 등)를 단일 폼에서 요청.",
+      "risk_weight": 0.95,
+      "detection_rule": "단일 폼 내에 비밀번호, 카드번호, 주민등록번호, OTP 등 민감 정보 입력 필드가 3개 이상 존재",
+      "indicators": ["민감 정보 필드 다수 존재", "autocomplete=off 설정", "입력값 실시간 외부 전송", "SSL 인증서 없는 폼 제출"]
+    },
+    {
+      "id": "pattern_022",
+      "type": "content_pattern",
+      "pattern": "fake_certificate_badge",
+      "description": "가짜 보안 인증 배지나 신뢰 마크를 표시하는 패턴. Norton Secured, McAfee SECURE, SSL 인증 등의 배지 이미지를 무단 사용하여 사이트의 신뢰성을 위장.",
+      "risk_weight": 0.65,
+      "detection_rule": "페이지 내 보안 인증 배지 이미지가 존재하지만 해당 인증 기관의 검증 링크가 없거나, 이미지가 정적 파일로만 존재",
+      "indicators": ["보안 배지 이미지 존재", "배지 클릭 시 검증 페이지 미연결", "배지 이미지가 외부 인증기관이 아닌 로컬에서 로드"]
+    },
+    {
+      "id": "pattern_023",
+      "type": "behavior_pattern",
+      "pattern": "auto_file_download",
+      "description": "사용자 동의 없이 자동으로 파일 다운로드를 시도하는 패턴. 페이지 방문 즉시 악성 파일(.exe, .apk, .dmg, .zip 등)을 자동으로 다운로드하거나 다운로드를 유도.",
+      "risk_weight": 0.95,
+      "detection_rule": "페이지 로드 시 자동 다운로드 트리거 (hidden anchor click, Blob URL 생성, Content-Disposition 헤더 조작)",
+      "indicators": ["자동 다운로드 시작", "실행 파일 확장자", "사용자 상호작용 없는 다운로드", "다운로드 프롬프트 우회 시도"]
+    },
+    {
+      "id": "pattern_024",
+      "type": "behavior_pattern",
+      "pattern": "clipboard_hijacking",
+      "description": "클립보드 내용을 무단으로 읽거나 변경하는 패턴. 암호화폐 지갑 주소를 공격자의 주소로 교체하거나, 복사된 민감 정보를 외부로 전송.",
+      "risk_weight": 0.9,
+      "detection_rule": "navigator.clipboard API 또는 document.execCommand('copy'/'paste')를 사용한 무단 클립보드 접근",
+      "indicators": ["clipboard API 호출", "copy/paste 이벤트 리스너", "클립보드 내용 외부 전송", "클립보드 내용 자동 변경"]
+    },
+    {
+      "id": "pattern_025",
+      "type": "behavior_pattern",
+      "pattern": "popup_storm",
+      "description": "대량의 팝업 또는 알림 창을 연속으로 생성하여 사용자를 혼란시키는 패턴. 팝업을 닫아도 새로운 팝업이 계속 생성되어 정상적인 브라우저 사용을 방해하고, 잘못된 클릭을 유도.",
+      "risk_weight": 0.8,
+      "detection_rule": "짧은 시간 내 window.open() 또는 alert() 다회 호출, 팝업 닫기 이벤트에 새 팝업 생성 로직",
+      "indicators": ["반복적 window.open() 호출", "onbeforeunload 이벤트 남용", "alert/confirm 연쇄 호출", "팝업 닫기 시 새 팝업 생성"]
+    },
+    {
+      "id": "pattern_026",
+      "type": "behavior_pattern",
+      "pattern": "browser_lock_scam",
+      "description": "브라우저를 잠금 상태로 만들어 사용자가 페이지를 떠나지 못하게 하는 기술지원 사기 패턴. 전체 화면 강제 전환, 마우스 커서 숨김, 경고 메시지 반복 표시 등으로 긴급 전화를 유도.",
+      "risk_weight": 0.95,
+      "detection_rule": "requestFullscreen() 강제 호출, history.pushState 반복으로 뒤로가기 차단, onbeforeunload에서 무한 confirm",
+      "indicators": ["전체화면 강제 전환", "뒤로가기 차단", "기술지원 전화번호 표시", "가짜 바이러스 경고 메시지"]
+    },
+    {
+      "id": "pattern_027",
+      "type": "behavior_pattern",
+      "pattern": "keylogger_injection",
+      "description": "페이지 내에서 키 입력을 기록하여 외부로 전송하는 패턴. 모든 키 입력 이벤트를 캡처하여 비밀번호, 카드번호 등의 민감 정보를 실시간으로 공격자 서버에 전송.",
+      "risk_weight": 0.95,
+      "detection_rule": "document 또는 window 레벨의 keydown/keypress/keyup 이벤트 리스너가 입력값을 외부 서버로 전송",
+      "indicators": ["전역 키 이벤트 리스너", "키 입력값 수집 로직", "외부 서버로 비동기 전송", "입력 필드 외 영역에서도 키 캡처"]
+    },
+    {
+      "id": "pattern_028",
+      "type": "behavior_pattern",
+      "pattern": "permission_abuse_request",
+      "description": "불필요한 브라우저 권한을 과도하게 요청하는 패턴. 단순 웹페이지임에도 알림, 위치, 카메라, 마이크 등의 권한을 동시에 요청하여 사용자 감시 또는 추가 공격에 활용.",
+      "risk_weight": 0.75,
+      "detection_rule": "페이지 로드 직후 Notification, Geolocation, MediaDevices 등 다수의 브라우저 권한을 연속 요청",
+      "indicators": ["다수 권한 동시 요청", "페이지 로드 즉시 권한 요청", "권한 거부 시 반복 요청", "불필요한 권한 요청"]
+    },
+    {
+      "id": "pattern_029",
+      "type": "url_pattern",
+      "pattern": "data_uri_phishing",
+      "description": "data: URI 스킴을 사용하여 피싱 페이지를 인라인으로 인코딩하는 패턴. 주소창에 실제 URL 대신 data:text/html 형태의 Base64 인코딩된 HTML이 표시되어 도메인 확인이 불가능.",
+      "risk_weight": 0.9,
+      "detection_rule": "URL이 data:text/html 또는 data:application/ 스킴으로 시작하며 Base64 인코딩된 컨텐츠 포함",
+      "examples": ["data:text/html;base64,PGh0bWw+...", "data:text/html,<script>...</script>"]
+    },
+    {
+      "id": "pattern_030",
+      "type": "url_pattern",
+      "pattern": "credential_in_url",
+      "description": "URL 내에 사용자 자격 증명 형태의 문자열이 포함된 패턴 (user:pass@domain 형식). 사용자가 URL을 신뢰하도록 혼동시키거나, 인증 정보를 URL에 노출시키는 기법.",
+      "risk_weight": 0.85,
+      "detection_rule": "URL에 @ 기호 앞에 user:password 형태의 문자열이 포함 (예: http://naver.com@evil.com)",
+      "examples": ["http://www.naver.com@phishing-site.com/login", "http://admin:password@malicious.com"]
+    },
+    {
+      "id": "pattern_031",
+      "type": "content_pattern",
+      "pattern": "obfuscated_javascript",
+      "description": "의도적으로 난독화된 JavaScript 코드가 포함된 패턴. eval(), atob(), String.fromCharCode() 등을 중첩 사용하여 악성 코드의 실제 동작을 숨김.",
+      "risk_weight": 0.85,
+      "detection_rule": "JavaScript 코드 내 eval(), atob(), unescape(), String.fromCharCode() 등의 난독화 함수가 중첩되어 사용",
+      "indicators": ["eval() 중첩 사용", "Base64 인코딩된 스크립트", "String.fromCharCode 다량 사용", "변수명이 무의미한 문자열"]
+    },
+    {
+      "id": "pattern_032",
+      "type": "content_pattern",
+      "pattern": "right_click_disabled",
+      "description": "마우스 오른쪽 클릭 또는 개발자 도구 접근을 차단하는 패턴. 사용자가 페이지 소스를 확인하거나 피싱 여부를 검증하는 것을 방해하려는 의도.",
+      "risk_weight": 0.6,
+      "detection_rule": "contextmenu 이벤트 차단, F12/Ctrl+Shift+I 키 조합 차단, devtools 감지 스크립트 존재",
+      "indicators": ["oncontextmenu=return false", "키보드 단축키 차단", "개발자 도구 감지 로직", "페이지 소스 보기 차단"]
+    }
+  ],
+  "keywords": {
+    "urgent_ko": [
+      "긴급",
+      "계정 정지",
+      "보안 경고",
+      "본인 확인 필요",
+      "즉시 확인",
+      "24시간 내",
+      "보안 위협",
+      "비밀번호 변경 필요",
+      "계정이 잠겼습니다",
+      "접속이 제한",
+      "이상 거래 감지",
+      "긴급 조치 필요",
+      "계정 보호",
+      "보안 업데이트",
+      "비정상적인 로그인",
+      "해외 접속 시도",
+      "본인이 아닌 경우",
+      "계정이 위험합니다",
+      "지금 바로 확인",
+      "기한 만료 임박"
+    ],
+    "urgent_en": [
+      "urgent",
+      "suspended",
+      "verify now",
+      "account suspended",
+      "verify immediately",
+      "urgent action required",
+      "your account has been",
+      "unauthorized access",
+      "security alert",
+      "confirm your identity",
+      "unusual activity",
+      "immediate action",
+      "account will be closed",
+      "within 24 hours",
+      "failure to verify",
+      "suspicious login",
+      "unauthorized transaction",
+      "account compromised"
+    ],
+    "reward_ko": [
+      "당첨",
+      "무료",
+      "이벤트 당선",
+      "상금",
+      "무료 제공",
+      "경품",
+      "축하합니다",
+      "선정되었습니다",
+      "리워드",
+      "보상금",
+      "지급 대기",
+      "수령하세요",
+      "특별 혜택",
+      "한정 수량",
+      "선착순",
+      "100% 무료",
+      "쿠폰 지급",
+      "포인트 적립"
+    ],
+    "reward_en": [
+      "congratulations",
+      "you won",
+      "free gift",
+      "claim your prize",
+      "selected winner",
+      "reward pending",
+      "exclusive offer",
+      "limited time",
+      "act now",
+      "free trial",
+      "no cost",
+      "you have been selected"
+    ],
+    "credential_ko": [
+      "비밀번호",
+      "주민등록번호",
+      "카드번호",
+      "계좌번호",
+      "인증번호",
+      "보안카드",
+      "OTP",
+      "공인인증서",
+      "CVC",
+      "유효기간",
+      "카드 비밀번호",
+      "계좌 비밀번호",
+      "휴대폰 인증",
+      "본인인증"
+    ],
+    "credential_en": [
+      "password",
+      "social security",
+      "credit card",
+      "bank account",
+      "verification code",
+      "PIN",
+      "CVV",
+      "expiry date",
+      "routing number",
+      "mother's maiden name",
+      "security question",
+      "one-time password"
+    ]
+  },
+  "trusted_domains": {
+    "korea": [
+      "naver.com",
+      "daum.net",
+      "kakao.com",
+      "kakaocorp.com",
+      "samsung.com",
+      "coupang.com",
+      "toss.im",
+      "kbstar.com",
+      "shinhan.com",
+      "wooribank.com",
+      "hanabank.com",
+      "nhbank.com",
+      "ibk.co.kr",
+      "gov.kr"
+    ],
+    "global": [
+      "google.com",
+      "apple.com",
+      "microsoft.com",
+      "amazon.com",
+      "facebook.com",
+      "instagram.com",
+      "twitter.com",
+      "github.com",
+      "paypal.com",
+      "netflix.com"
+    ]
+  },
+  "suspicious_tlds": [
+    ".tk",
+    ".ml",
+    ".ga",
+    ".cf",
+    ".gq",
+    ".cc",
+    ".cm",
+    ".top",
+    ".xyz",
+    ".work",
+    ".click",
+    ".link",
+    ".loan",
+    ".win",
+    ".racing",
+    ".download",
+    ".stream",
+    ".bid",
+    ".icu",
+    ".buzz"
+  ]
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhishGuard</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup">
+    <header class="header">
+      <h1 class="header__title">PhishGuard</h1>
+      <p class="header__domain" id="current-domain">로딩 중...</p>
+    </header>
+
+    <div class="gauge" id="gauge-section">
+      <svg class="gauge__svg" viewBox="0 0 120 120">
+        <circle class="gauge__bg" cx="60" cy="60" r="50" />
+        <circle class="gauge__fill" id="gauge-fill" cx="60" cy="60" r="50" />
+        <text class="gauge__score" id="gauge-score" x="60" y="58" text-anchor="middle" dominant-baseline="middle">--</text>
+        <text class="gauge__label" id="gauge-label" x="60" y="78" text-anchor="middle">분석 중</text>
+      </svg>
+    </div>
+
+    <div class="results" id="results-list">
+      <p class="results__empty">분석 결과를 불러오는 중...</p>
+    </div>
+
+    <footer class="footer">
+      <span class="footer__text">PhishGuard v1.0</span>
+    </footer>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

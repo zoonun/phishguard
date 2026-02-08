@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "PhishGuard - AI 피싱 감지",
+  "version": "1.0.0",
+  "description": "당신의 브라우저를 지키는 AI 경비원. LLM + RAG 기반 피싱/스캠 사이트 실시간 감지 크롬 익스텐션",
+  "icons": {
+    "16": "assets/icon-16.png",
+    "48": "assets/icon-48.png",
+    "128": "assets/icon-128.png"
+  },
+  "permissions": ["activeTab", "storage", "tabs", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/content-script.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "assets/icon-16.png",
+      "48": "assets/icon-48.png",
+      "128": "assets/icon-128.png"
+    },
+    "default_title": "PhishGuard - AI 피싱 감지"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "ui/alert-banner.css",
+        "rag/known-domains.json",
+        "rag/phishing-patterns.json"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
