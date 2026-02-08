@@ -4,7 +4,7 @@
  */
 
 const DEFAULT_SETTINGS = {
-  llmProvider: 'glm',           // 'glm' | 'gemini'
+  llmProvider: 'gemini',         // 'glm' | 'gemini'
   apiKey: '',
   enableLLM: true,
   enableNotifications: true,

@@ -1,6 +1,6 @@
 /**
  * PhishGuard - LLM API 호출 클라이언트
- * GLM(z.ai) 기본 지원, Gemini 추가 가능
+ * Gemini 기본 지원, GLM(z.ai) 추가 가능
  */
 
 import Settings from "../config/settings.js";
@@ -26,6 +26,7 @@ const PROVIDERS = {
         ],
         temperature: 0.3,
         max_tokens: 1024,
+        thinking: { type: "disabled" },
       };
     },
     extractContent(response) {
@@ -58,7 +59,7 @@ const PROVIDERS = {
 };
 
 const LLMClient = {
-  _provider: "glm",
+  _provider: "gemini",
   _apiKey: "",
   _timeout: 30000,
   _maxRetries: 2,
@@ -69,7 +70,7 @@ const LLMClient = {
   async init() {
     try {
       const settings = await Settings.getAll();
-      this._provider = settings.llmProvider || "glm";
+      this._provider = settings.llmProvider || "gemini";
       this._apiKey = settings.apiKey || "";
     } catch {
       Logger.warn("[LLMClient] Failed to load settings, using defaults");
@@ -113,11 +114,11 @@ const LLMClient = {
           error.message,
         );
 
-        // rate limit인 경우만 재시도
-        if (error.status === 429 || error.message.includes("rate")) {
+        // 서버 일시적 오류(5xx)만 재시도
+        if (error.status >= 500) {
           continue;
         }
-        // 그 외 에러는 바로 throw
+        // 429 rate limit, 인증 에러 등은 재시도해도 소용없으므로 바로 throw
         throw error;
       }
     }

@@ -25,7 +25,7 @@ const DetailPanel = {
 
     const items = results
       .filter(r => r.confidence > 0)
-      .sort((a, b) => b.risk - a.risk)
+      .sort((a, b) => (b.name === 'LLMAnalyzer') - (a.name === 'LLMAnalyzer') || b.risk - a.risk)
       .map(r => {
         const label = moduleLabels[r.name] || r.name;
         const riskClass = r.risk >= 70 ? 'danger' : r.risk >= 40 ? 'warning' : 'safe';

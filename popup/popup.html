@@ -17,7 +17,9 @@
             alt="PhishGuard"
           />
           <h1 class="header__title">PhishGuard</h1>
-          <span class="header__toggle-label" id="ext-toggle-label">보호 중</span>
+          <span class="header__toggle-label" id="ext-toggle-label"
+            >보호 중</span
+          >
           <label class="toggle" title="PhishGuard 활성화/비활성화">
             <input type="checkbox" id="ext-toggle" checked />
             <span class="toggle__slider"></span>
@@ -107,39 +109,6 @@
         <div id="llm-settings-group">
           <label class="settings__label">LLM 제공자</label>
           <div class="model-picker" id="model-picker">
-            <button class="model-picker__item" data-value="glm" type="button">
-              <span class="model-picker__logo">
-                <svg
-                  width="28"
-                  height="28"
-                  viewBox="0 0 30 30"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <rect
-                    x="1.49"
-                    y="1.49"
-                    rx="4"
-                    width="27.02"
-                    height="27.02"
-                    fill="#16162b"
-                  />
-                  <path
-                    d="M15.47,7.1l-1.3,1.85c-0.2,0.29-0.54,0.47-0.9,0.47h-7.1V7.09C6.16,7.1,15.47,7.1,15.47,7.1z"
-                    fill="white"
-                  />
-                  <polygon
-                    points="24.3,7.1 13.14,22.91 5.7,22.91 16.86,7.1"
-                    fill="white"
-                  />
-                  <path
-                    d="M14.53,22.91l1.31-1.86c0.2-0.29,0.54-0.47,0.9-0.47h7.09v2.33H14.53z"
-                    fill="white"
-                  />
-                </svg>
-              </span>
-              <span class="model-picker__name">GLM</span>
-            </button>
             <button
               class="model-picker__item"
               data-value="gemini"
@@ -176,6 +145,39 @@
                 </svg>
               </span>
               <span class="model-picker__name">Gemini</span>
+            </button>
+            <button class="model-picker__item" data-value="glm" type="button">
+              <span class="model-picker__logo">
+                <svg
+                  width="28"
+                  height="28"
+                  viewBox="0 0 30 30"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <rect
+                    x="1.49"
+                    y="1.49"
+                    rx="4"
+                    width="27.02"
+                    height="27.02"
+                    fill="#16162b"
+                  />
+                  <path
+                    d="M15.47,7.1l-1.3,1.85c-0.2,0.29-0.54,0.47-0.9,0.47h-7.1V7.09C6.16,7.1,15.47,7.1,15.47,7.1z"
+                    fill="white"
+                  />
+                  <polygon
+                    points="24.3,7.1 13.14,22.91 5.7,22.91 16.86,7.1"
+                    fill="white"
+                  />
+                  <path
+                    d="M14.53,22.91l1.31-1.86c0.2-0.29,0.54-0.47,0.9-0.47h7.09v2.33H14.53z"
+                    fill="white"
+                  />
+                </svg>
+              </span>
+              <span class="model-picker__name">GLM</span>
             </button>
           </div>
 

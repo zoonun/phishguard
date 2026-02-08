@@ -333,6 +333,72 @@ body::-webkit-scrollbar-thumb:hover {
   letter-spacing: 0.5px;
 }
 
+/* ===== AI Error Card ===== */
+.result-card--error {
+  background: linear-gradient(135deg, #2d1b1b 0%, #22223a 100%);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+}
+
+.result-card--error:hover {
+  border-color: rgba(248, 113, 113, 0.5);
+  background: linear-gradient(135deg, #3a2020 0%, #2a2a50 100%);
+}
+
+.result-card--error .result-card__name {
+  color: #fca5a5;
+}
+
+.result-card--error .result-card__ai-badge {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.15);
+  border-color: rgba(248, 113, 113, 0.3);
+}
+
+.result-card--error .result-card__risk {
+  background: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.result-card__error-detail {
+  padding: 0 14px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.result-card--expanded .result-card__error-detail {
+  max-height: 300px;
+  padding: 0 14px 12px;
+}
+
+.result-card__error-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #f87171;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+  margin-top: 4px;
+}
+
+.result-card__error-body {
+  background: #16162b;
+  border: 1px solid rgba(248, 113, 113, 0.2);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 11px;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  color: #e0e0e0;
+  white-space: pre-wrap;
+  word-break: break-all;
+  line-height: 1.5;
+  margin: 0;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
 /* ===== Settings Panel ===== */
 .settings {
   display: none;

@@ -83,6 +83,7 @@
 
       const details = (results || [])
         .filter(r => r.confidence > 0)
+        .sort((a, b) => (b.name === 'LLMAnalyzer') - (a.name === 'LLMAnalyzer'))
         .map(r => {
           const cls = r.risk >= 70 ? 'danger' : r.risk >= 40 ? 'warning' : 'safe';
           return `<div class="pg-detail__item">

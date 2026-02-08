@@ -85,6 +85,7 @@ const AlertBanner = {
     if (results && results.length > 0) {
       detailItems = results
         .filter(r => r.confidence > 0)
+        .sort((a, b) => (b.name === 'LLMAnalyzer') - (a.name === 'LLMAnalyzer'))
         .map(r => {
           const riskClass = r.risk >= 70 ? 'danger' : r.risk >= 40 ? 'warning' : 'safe';
           return `

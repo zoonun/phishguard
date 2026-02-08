@@ -22,7 +22,9 @@ let extEnabled = true;
 
 // 초기 설정 로드 완료 Promise
 let _initReady;
-const initReady = new Promise((resolve) => { _initReady = resolve; });
+const initReady = new Promise((resolve) => {
+  _initReady = resolve;
+});
 
 /**
  * 익스텐션 활성화 상태 로드
@@ -43,9 +45,11 @@ async function loadLlmSettings() {
   try {
     const data = await chrome.storage.sync.get(["llmProvider", "apiKey"]);
     if (data.apiKey) {
-      LLMClient.setProvider(data.llmProvider || "glm");
+      LLMClient.setProvider(data.llmProvider || "gemini");
       LLMClient.setApiKey(data.apiKey);
-      Logger.info(`[ServiceWorker] LLM enabled: ${data.llmProvider || "glm"}`);
+      Logger.info(
+        `[ServiceWorker] LLM enabled: ${data.llmProvider || "gemini"}`,
+      );
     } else {
       LLMClient.setApiKey("");
       Logger.debug("[ServiceWorker] LLM disabled: no API key");
@@ -360,16 +364,22 @@ async function verifyApiKey(provider, apiKey) {
       }
 
       if (error.status === 401 || error.status === 403) {
-        return { valid: false, error: "인증 실패 - 키를 확인해주세요" };
+        return { valid: false, error: "인증 실패 - API 키를 확인해주세요." };
       }
       if (error.status === 429) {
         // Rate limited means the key is valid
         return { valid: true };
       }
-      return { valid: false, error: error.message || "알 수 없는 오류" };
+      return {
+        valid: false,
+        error: "키 검증에 실패했습니다. 잠시 후 다시 시도해주세요.",
+      };
     }
   } catch (error) {
-    return { valid: false, error: error.message || "검증 중 오류 발생" };
+    return {
+      valid: false,
+      error: "검증 중 오류가 발생했습니다. 네트워크를 확인해주세요.",
+    };
   }
 }
 
@@ -405,16 +415,28 @@ async function handleDomContent(tabId, url, domContent) {
     pageTitle: domContent?.title,
   };
 
-  // 기존 캐시 삭제 후 재분석
+  // 이전 LLM 결과 보존 (analyzeUrl에서 이미 실행됨)
+  const prevData = await chrome.storage.session.get(`tab_${tabId}`);
+  const prevResult = prevData[`tab_${tabId}`];
+  const prevLlm = prevResult?.results?.find(
+    (r) => r.name === "LLMAnalyzer" && r.confidence > 0,
+  );
+
+  // 기존 캐시 삭제 후 재분석 (LLM 제외 - 중복 호출 방지)
   analysisCache.delete(parsed.hostname);
   await storeResult(tabId, { status: "analyzing", hostname: parsed.hostname });
 
-  const llmEnabled = LLMClient.hasApiKey();
   const result = await DetectorManager.analyze(context, {
-    enableLLM: llmEnabled,
-    apiClient: llmEnabled ? LLMClient : null,
+    enableLLM: false,
     prompts: Prompts,
   });
+
+  // 이전 LLM 결과 병합
+  if (prevLlm) {
+    result.results.push(prevLlm);
+    result.totalRisk = DetectorManager._calculateTotalRisk(result.results);
+    result.riskLevel = DetectorManager._getRiskLevel(result.totalRisk);
+  }
 
   result.hostname = parsed.hostname;
   result.analyzedAt = Date.now();

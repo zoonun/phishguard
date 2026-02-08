@@ -56,7 +56,7 @@
   var llmChipText = document.getElementById("llm-chip-text");
   var modelPicker = document.getElementById("model-picker");
   var apiKeyInput = document.getElementById("api-key");
-  var _selectedProvider = "glm";
+  var _selectedProvider = "gemini";
   var saveBtn = document.getElementById("settings-save");
   var statusEl = document.getElementById("settings-status");
 
@@ -228,10 +228,11 @@
       return;
     }
 
-    // Filter to results with confidence > 0, AI 카드를 최상단에 배치
+    // Filter to results with confidence > 0, 또는 LLM 에러 결과 포함
+    // AI 카드를 최상단에 배치
     var filtered = results
       .filter(function (r) {
-        return r.confidence > 0;
+        return r.confidence > 0 || (r.name === "LLMAnalyzer" && r.details && r.details.apiError);
       })
       .sort(function (a, b) {
         return (b.name === "LLMAnalyzer") - (a.name === "LLMAnalyzer");
@@ -249,10 +250,19 @@
         var label = MODULE_LABELS[r.name] || r.name;
         var reason = escapeHtml(r.reason || "");
         var isAI = r.name === "LLMAnalyzer";
-        var cardClass = "result-card" + (isAI ? " result-card--ai" : "");
+        var isAIError = isAI && r.details && r.details.apiError;
+        var cardClass = "result-card" + (isAI ? " result-card--ai" : "") + (isAIError ? " result-card--error" : "");
         var aiBadge = isAI
-          ? '<span class="result-card__ai-badge">AI</span>'
+          ? '<span class="result-card__ai-badge">' + (isAIError ? "Error" : "AI") + '</span>'
           : "";
+
+        var errorDetail = "";
+        if (isAIError && r.details.error) {
+          errorDetail = '<div class="result-card__error-detail">' +
+            '<span class="result-card__error-label">API Response</span>' +
+            '<pre class="result-card__error-body">' + escapeHtml(r.details.error) + '</pre>' +
+            '</div>';
+        }
 
         return (
           '<div class="' +
@@ -266,13 +276,14 @@
           '<span class="result-card__risk result-card__risk--' +
           cls +
           '">' +
-          r.risk +
+          (isAIError ? "오류" : r.risk) +
           "</span>" +
           '<span class="result-card__chevron">&#9660;</span>' +
           "</div>" +
           '<p class="result-card__reason">' +
           reason +
           "</p>" +
+          errorDetail +
           "</div>"
         );
       })
@@ -450,7 +461,7 @@
         settingsLlmToggle.checked = llm;
         applyLlmState(llm);
 
-        selectProvider(data.llmProvider || "glm");
+        selectProvider(data.llmProvider || "gemini");
         if (data.apiKey) {
           apiKeyInput.value = data.apiKey;
         }
@@ -459,7 +470,7 @@
   }
 
   function saveSettings() {
-    var provider = _selectedProvider || "glm";
+    var provider = _selectedProvider || "gemini";
     var apiKey = apiKeyInput.value.trim();
 
     if (!apiKey) {
@@ -489,11 +500,7 @@
         }
 
         if (!response || !response.valid) {
-          showStatus(
-            "API 키가 유효하지 않습니다: " +
-              (response?.error || "알 수 없는 오류"),
-            "error",
-          );
+          showStatus(response?.error || "API 키 검증에 실패했습니다.", "error");
           return;
         }
 

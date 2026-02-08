@@ -100,7 +100,12 @@ const LLMAnalyzer = {
         confidence: 0,
         reason:
           "LLM 분석 중 오류가 발생했습니다. 다른 감지 모듈의 결과만으로 판단합니다.",
-        details: { error: error.message, skipped: true, reason: "api_error" },
+        details: {
+          error: error.message,
+          skipped: true,
+          reason: "api_error",
+          apiError: true,
+        },
       };
     }
   },
