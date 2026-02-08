@@ -7,27 +7,65 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div class="popup">
+  <div class="popup" id="popup">
+    <!-- ===== Header ===== -->
     <header class="header">
-      <h1 class="header__title">PhishGuard</h1>
+      <div class="header__brand">
+        <span class="header__icon">&#x1F6E1;&#xFE0F;</span>
+        <h1 class="header__title">PhishGuard</h1>
+      </div>
       <p class="header__domain" id="current-domain">로딩 중...</p>
     </header>
 
-    <div class="gauge" id="gauge-section">
-      <svg class="gauge__svg" viewBox="0 0 120 120">
-        <circle class="gauge__bg" cx="60" cy="60" r="50" />
-        <circle class="gauge__fill" id="gauge-fill" cx="60" cy="60" r="50" />
-        <text class="gauge__score" id="gauge-score" x="60" y="58" text-anchor="middle" dominant-baseline="middle">--</text>
-        <text class="gauge__label" id="gauge-label" x="60" y="78" text-anchor="middle">분석 중</text>
-      </svg>
-    </div>
+    <!-- ===== Main Content ===== -->
+    <main class="main" id="main-view">
+      <!-- Risk Gauge -->
+      <section class="gauge" id="gauge-section">
+        <svg class="gauge__svg" viewBox="0 0 140 140">
+          <defs>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          <circle class="gauge__bg" cx="70" cy="70" r="56" />
+          <circle class="gauge__fill" id="gauge-fill" cx="70" cy="70" r="56" filter="url(#glow)" />
+          <text class="gauge__score" id="gauge-score" x="70" y="66" text-anchor="middle" dominant-baseline="middle">--</text>
+          <text class="gauge__label" id="gauge-label" x="70" y="90" text-anchor="middle">분석 중</text>
+        </svg>
+        <p class="gauge__risk-text" id="gauge-risk-text">분석 중...</p>
+      </section>
 
-    <div class="results" id="results-list">
-      <p class="results__empty">분석 결과를 불러오는 중...</p>
-    </div>
+      <!-- Detector Results -->
+      <section class="results" id="results-list">
+        <p class="results__empty">분석 결과를 불러오는 중...</p>
+      </section>
+    </main>
 
+    <!-- ===== Settings Panel (hidden by default) ===== -->
+    <section class="settings" id="settings-panel">
+      <h2 class="settings__title">API 설정</h2>
+
+      <label class="settings__label" for="llm-provider">LLM 제공자</label>
+      <select class="settings__select" id="llm-provider">
+        <option value="glm">GLM</option>
+        <option value="gemini">Gemini</option>
+      </select>
+
+      <label class="settings__label" for="api-key">API 키</label>
+      <input class="settings__input" id="api-key" type="password" placeholder="API 키를 입력하세요" spellcheck="false" autocomplete="off" />
+
+      <button class="settings__save" id="settings-save">저장</button>
+      <p class="settings__status" id="settings-status"></p>
+    </section>
+
+    <!-- ===== Footer ===== -->
     <footer class="footer">
       <span class="footer__text">PhishGuard v1.0</span>
+      <button class="footer__settings-btn" id="settings-toggle" title="API 설정">&#x2699;&#xFE0F;</button>
     </footer>
   </div>
   <script src="popup.js"></script>
