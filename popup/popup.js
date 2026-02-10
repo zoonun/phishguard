@@ -264,6 +264,27 @@
             '</div>';
         }
 
+        var findingsList = "";
+        if (r.name === "ContentAnalyzer" && r.details && r.details.findings && r.details.findings.length > 0) {
+          var items = r.details.findings.map(function (f) {
+            var bullets = [];
+            if (f.matches && f.matches.length > 0) {
+              bullets = f.matches;
+            } else if (f.details && f.details.length > 0) {
+              bullets = f.details;
+            }
+            var bulletHtml = bullets.length > 0
+              ? '<ul class="result-card__finding-bullets">' +
+                bullets.map(function (b) {
+                  return '<li>' + escapeHtml(b) + '</li>';
+                }).join("") +
+                '</ul>'
+              : "";
+            return '<li><strong>' + escapeHtml(f.description) + '</strong>' + bulletHtml + '</li>';
+          }).join("");
+          findingsList = '<ul class="result-card__findings">' + items + '</ul>';
+        }
+
         return (
           '<div class="' +
           cardClass +
@@ -283,6 +304,7 @@
           '<p class="result-card__reason">' +
           reason +
           "</p>" +
+          findingsList +
           errorDetail +
           "</div>"
         );

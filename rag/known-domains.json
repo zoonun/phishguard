@@ -597,7 +597,56 @@
         "www.scourt.go.kr",
         "m.scourt.go.kr",
         "efiling.scourt.go.kr",
-        "ecfs.scourt.go.kr"
+        "ecfs.scourt.go.kr",
+        "iros.go.kr",
+        "www.iros.go.kr"
+      ],
+      "category": "government",
+      "country": "KR"
+    },
+    {
+      "name": "대검찰청",
+      "primary": "spo.go.kr",
+      "aliases": [
+        "www.spo.go.kr",
+        "m.spo.go.kr",
+        "portal.spo.go.kr",
+        "minwon.spo.go.kr"
+      ],
+      "category": "government",
+      "country": "KR"
+    },
+    {
+      "name": "경찰청",
+      "primary": "police.go.kr",
+      "aliases": [
+        "www.police.go.kr",
+        "m.police.go.kr",
+        "cyberbureau.police.go.kr",
+        "ecrm.police.go.kr",
+        "112.go.kr"
+      ],
+      "category": "government",
+      "country": "KR"
+    },
+    {
+      "name": "금융감독원",
+      "primary": "fss.or.kr",
+      "aliases": [
+        "www.fss.or.kr",
+        "m.fss.or.kr",
+        "fine.fss.or.kr",
+        "consumer.fss.or.kr"
+      ],
+      "category": "government",
+      "country": "KR"
+    },
+    {
+      "name": "행정안전부",
+      "primary": "mois.go.kr",
+      "aliases": [
+        "www.mois.go.kr",
+        "m.mois.go.kr"
       ],
       "category": "government",
       "country": "KR"

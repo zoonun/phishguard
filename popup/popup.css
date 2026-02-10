@@ -304,6 +304,59 @@ body::-webkit-scrollbar-thumb:hover {
   padding: 0 14px 12px;
 }
 
+/* ===== Content Findings List ===== */
+.result-card__findings {
+  list-style: none;
+  padding: 0 14px;
+  margin: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.result-card--expanded .result-card__findings {
+  max-height: 400px;
+  padding: 0 14px 12px;
+}
+
+.result-card__findings > li {
+  font-size: 12px;
+  color: #c0c0d8;
+  padding: 6px 0;
+  border-bottom: 1px solid #2a2a4a;
+}
+
+.result-card__findings > li:last-child {
+  border-bottom: none;
+}
+
+.result-card__findings > li strong {
+  color: #d0d0e8;
+  font-weight: 600;
+}
+
+.result-card__finding-bullets {
+  list-style: none;
+  padding: 4px 0 0 0;
+  margin: 0;
+}
+
+.result-card__finding-bullets li {
+  position: relative;
+  padding-left: 14px;
+  font-size: 11px;
+  color: #9999bb;
+  line-height: 1.7;
+}
+
+.result-card__finding-bullets li::before {
+  content: '·';
+  position: absolute;
+  left: 4px;
+  color: #a78bfa;
+  font-weight: 700;
+}
+
 /* ===== AI Analysis Card ===== */
 .result-card--ai {
   background: linear-gradient(135deg, #1e1b4b 0%, #22223a 100%);

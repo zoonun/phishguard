@@ -65,6 +65,22 @@ const KNOWN_BRANDS = [
   '우리은행', '하나은행', '농협', '토스', '쿠팡'
 ];
 
+// 한글 브랜드명 → 도메인에서 사용하는 영문 키워드 매핑
+const BRAND_DOMAIN_MAP = {
+  '네이버': 'naver',
+  '카카오': 'kakao',
+  '구글': 'google',
+  '삼성': 'samsung',
+  '애플': 'apple',
+  '국민은행': 'kbstar',
+  '신한은행': 'shinhan',
+  '우리은행': 'wooribank',
+  '하나은행': 'hanabank',
+  '농협': 'nonghyup',
+  '토스': 'toss',
+  '쿠팡': 'coupang',
+};
+
 const ContentAnalyzer = {
   name: 'ContentAnalyzer',
   weight: 0.2,
@@ -304,7 +320,8 @@ const ContentAnalyzer = {
       const brandLower = brand.toLowerCase();
 
       // 도메인에 해당 브랜드가 포함되지 않는데 타이틀에 있는 경우
-      if (textToCheck.includes(brandLower) && !hostname.includes(brandLower)) {
+      const domainKey = BRAND_DOMAIN_MAP[brand] || brandLower;
+      if (textToCheck.includes(brandLower) && !hostname.includes(brandLower) && !hostname.includes(domainKey)) {
         details.push(`타이틀에 "${brand}" 브랜드명이 있지만 도메인(${hostname})이 일치하지 않음`);
         weight += 0.4;
         break; // 하나만 감지해도 충분
@@ -314,7 +331,8 @@ const ContentAnalyzer = {
     // 외부 파비콘 사용 감지
     if (domContent?.favicon) {
       for (const brand of KNOWN_BRANDS) {
-        if (domContent.favicon.includes(brand) && !hostname.includes(brand)) {
+        const favDomainKey = BRAND_DOMAIN_MAP[brand] || brand;
+        if (domContent.favicon.includes(brand) && !hostname.includes(brand) && !hostname.includes(favDomainKey)) {
           details.push(`${brand}의 파비콘을 사용하지만 도메인이 다름`);
           weight += 0.3;
           break;
@@ -345,7 +363,8 @@ const ContentAnalyzer = {
     // 유명 사이트의 이미지/로고를 사용하는데 도메인이 다른 경우
     for (const resourceUrl of domContent.externalResources) {
       for (const brand of KNOWN_BRANDS) {
-        if (resourceUrl.includes(brand) && !hostname.includes(brand)) {
+        const resDomainKey = BRAND_DOMAIN_MAP[brand] || brand;
+        if (resourceUrl.includes(brand) && !hostname.includes(brand) && !hostname.includes(resDomainKey)) {
           // 이미지 리소스인 경우 (로고 도용 의심)
           if (/\.(png|jpg|jpeg|gif|svg|ico)/i.test(resourceUrl) &&
               /(logo|brand|icon)/i.test(resourceUrl)) {
