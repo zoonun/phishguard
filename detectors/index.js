@@ -182,7 +182,7 @@ const DetectorManager = {
     let totalRisk = totalWeight > 0 ? Math.round(weightedSum / totalWeight) : 0;
 
     // risk가 90 이상인 모듈이 하나라도 있으면 최소 70점
-    const hasHighRisk = validResults.some(r => r.risk >= 90 && r.confidence >= 0.5);
+    const hasHighRisk = validResults.some(r => r.risk >= 85 && r.confidence >= 0.5);
     if (hasHighRisk && totalRisk < 70) {
       totalRisk = 70;
     }

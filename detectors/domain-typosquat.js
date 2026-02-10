@@ -11,7 +11,7 @@ let knownDomainsCache = null;
 
 const TyposquatDetector = {
   name: 'TyposquatDetector',
-  weight: 0.3,
+  weight: 0.4,
 
   // 유사도 임계값
   SIMILARITY_THRESHOLD: 0.85,
