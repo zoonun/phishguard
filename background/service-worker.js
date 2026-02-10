@@ -9,6 +9,9 @@ import RiskBadge from "../ui/risk-badge.js";
 import Logger from "../utils/logger.js";
 import LLMClient from "../llm/api-client.js";
 import Prompts from "../llm/prompts.js";
+import KisaSync from "./kisa-sync.js";
+import KisaBlacklistDetector from "../detectors/kisa-blacklist.js";
+import ENV from "../config/env.js";
 
 // 분석 결과 캐시 (도메인 → 결과)
 const analysisCache = new Map();
@@ -332,6 +335,33 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
 
+  if (message.type === "VERIFY_KISA_KEY") {
+    verifyKisaApiKey(message.apiKey).then(sendResponse);
+    return true;
+  }
+
+  if (message.type === "KISA_SYNC_STATUS") {
+    KisaSync.getSyncStatus().then(sendResponse);
+    return true;
+  }
+
+  if (message.type === "KISA_TRIGGER_SYNC") {
+    (async () => {
+      const data = await chrome.storage.sync.get("kisaApiKey");
+      if (data.kisaApiKey) {
+        const result = await KisaSync.startFullSync(data.kisaApiKey);
+        KisaBlacklistDetector.invalidateCache();
+        sendResponse(result);
+      } else {
+        sendResponse({
+          success: false,
+          error: "API 키가 설정되지 않았습니다.",
+        });
+      }
+    })();
+    return true;
+  }
+
   return false;
 });
 
@@ -382,6 +412,45 @@ async function verifyApiKey(provider, apiKey) {
     };
   }
 }
+
+/**
+ * KISA API 키 검증 (테스트 호출)
+ */
+async function verifyKisaApiKey(apiKey) {
+  try {
+    const url = `https://api.odcloud.kr/api/15109780/v1/uddi:707478dd-938f-4155-badb-fae6202ee7ed?serviceKey=${encodeURIComponent(apiKey)}&page=1&perPage=1&returnType=JSON`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      return { valid: false, error: `API 응답 오류: ${response.status}` };
+    }
+
+    const data = await response.json();
+    if (data.currentCount >= 0 && data.totalCount > 0) {
+      return { valid: true, totalCount: data.totalCount };
+    }
+
+    return { valid: false, error: data.message || "알 수 없는 오류" };
+  } catch (error) {
+    return { valid: false, error: `네트워크 오류: ${error.message}` };
+  }
+}
+
+/**
+ * KISA 블랙리스트 주기적 동기화 (chrome.alarms)
+ */
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name === "kisa-blacklist-sync") {
+    const data = await chrome.storage.sync.get(["kisaApiKey", "kisaEnabled"]);
+    if (data.kisaApiKey && data.kisaEnabled !== false) {
+      Logger.info(
+        "[ServiceWorker] KISA alarm triggered, starting incremental sync",
+      );
+      await KisaSync.startIncrementalSync(data.kisaApiKey);
+      KisaBlacklistDetector.invalidateCache();
+    }
+  }
+});
 
 /**
  * 분석 결과 조회 핸들러
@@ -482,17 +551,51 @@ chrome.storage.onChanged.addListener((changes, area) => {
       });
     }
   }
+  if (changes.kisaApiKey || changes.kisaEnabled) {
+    // KISA 설정 변경 시 캐시 클리어 + 동기화 재초기화
+    KisaBlacklistDetector.invalidateCache();
+    analysisCache.clear();
+    chrome.storage.session.clear();
+    if (changes.kisaApiKey?.newValue) {
+      KisaSync.init();
+    }
+    Logger.info(
+      "[ServiceWorker] Analysis cache cleared (KISA settings changed)",
+    );
+  }
 });
 
 /**
  * 익스텐션 설치/업데이트 시 초기화
  */
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener(async () => {
   Logger.info("[PhishGuard] Extension installed/updated");
+  await seedEnvKeys();
   loadWhitelist();
   loadLlmSettings();
   loadExtEnabled();
+  KisaSync.init();
 });
 
+/**
+ * env.js에 API 키가 있으면 storage에 자동 세팅 (storage에 값이 없을 때만)
+ */
+async function seedEnvKeys() {
+  if (ENV.KISA_API_KEY) {
+    const data = await chrome.storage.sync.get("kisaApiKey");
+    if (!data.kisaApiKey) {
+      await chrome.storage.sync.set({
+        kisaApiKey: ENV.KISA_API_KEY,
+        kisaEnabled: true,
+      });
+      Logger.info("[ServiceWorker] KISA API key seeded from env.js");
+    }
+  }
+}
+
 // 서비스워커 시작 시에도 설정 로드 (완료 후 initReady resolve)
-Promise.all([loadLlmSettings(), loadExtEnabled()]).then(_initReady);
+Promise.all([
+  seedEnvKeys(),
+  loadLlmSettings(),
+  loadExtEnabled(),
+]).then(() => KisaSync.init()).then(_initReady);

@@ -7,6 +7,7 @@ import TyposquatDetector from './domain-typosquat.js';
 import ProtocolDetector from './protocol-check.js';
 import DomainAgeDetector from './domain-age.js';
 import ContentAnalyzer from './content-analysis.js';
+import KisaBlacklistDetector from './kisa-blacklist.js';
 import LLMAnalyzer from './llm-analysis.js';
 import Logger from '../utils/logger.js';
 
@@ -16,7 +17,8 @@ const DetectorManager = {
     TyposquatDetector,
     ProtocolDetector,
     DomainAgeDetector,
-    ContentAnalyzer
+    ContentAnalyzer,
+    KisaBlacklistDetector
   ],
 
   // LLM 분석기 (별도 관리 - 조건부 실행)
@@ -60,7 +62,8 @@ const DetectorManager = {
         'TyposquatDetector': 'typosquat',
         'ProtocolDetector': 'protocol',
         'DomainAgeDetector': 'domainAge',
-        'ContentAnalyzer': 'contentAnalysis'
+        'ContentAnalyzer': 'contentAnalysis',
+        'KisaBlacklistDetector': 'kisaBlacklist'
       };
       const key = nameMap[detector.name];
       return key ? enabledDetectors[key] !== false : true;

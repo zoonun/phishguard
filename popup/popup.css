@@ -719,6 +719,33 @@ body::-webkit-scrollbar-thumb:hover {
   display: none;
 }
 
+/* ===== KISA Settings Group ===== */
+#kisa-settings-group {
+  transition: opacity 0.25s ease;
+}
+
+#kisa-settings-group.kisa-settings-group--hidden {
+  display: none;
+}
+
+.kisa-sync-status {
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: #16162b;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #8888aa;
+  line-height: 1.6;
+}
+
+.kisa-sync-status--syncing {
+  color: #a78bfa;
+}
+
+.kisa-sync-status--ready {
+  color: #4ade80;
+}
+
 /* ===== Disabled State ===== */
 .popup--disabled .main {
   opacity: 0.3;

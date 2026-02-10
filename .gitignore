@@ -1,1 +1,2 @@
-.env
+config/env.js
+.DS_Store

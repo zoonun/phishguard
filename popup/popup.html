@@ -194,6 +194,33 @@
           <button class="settings__save" id="settings-save">저장</button>
         </div>
 
+        <!-- KISA Blacklist Settings -->
+        <div class="settings__row">
+          <span class="settings__row-label">KISA 블랙리스트</span>
+          <label class="toggle">
+            <input type="checkbox" id="settings-kisa-toggle" />
+            <span class="toggle__slider"></span>
+          </label>
+        </div>
+
+        <div id="kisa-settings-group" class="kisa-settings-group--hidden">
+          <label class="settings__label" for="kisa-api-key"
+            >공공데이터포털 API 키</label
+          >
+          <input
+            class="settings__input"
+            id="kisa-api-key"
+            type="password"
+            placeholder="data.go.kr 서비스키를 입력하세요"
+            spellcheck="false"
+            autocomplete="off"
+          />
+          <button class="settings__save" id="kisa-save" type="button">
+            KISA 키 저장
+          </button>
+          <div class="kisa-sync-status" id="kisa-sync-status"></div>
+        </div>
+
         <p class="settings__status" id="settings-status"></p>
       </section>
 

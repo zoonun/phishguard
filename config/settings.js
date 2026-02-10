@@ -17,7 +17,8 @@ const DEFAULT_SETTINGS = {
     protocol: true,
     domainAge: true,
     contentAnalysis: true,
-    llmAnalysis: true
+    llmAnalysis: true,
+    kisaBlacklist: true
   },
   whitelist: [],
   cacheExpiry: 3600000           // 1시간 (ms)

@@ -78,6 +78,7 @@
         'ProtocolDetector': '\uD504\uB85C\uD1A0\uCF5C \uBCF4\uC548',
         'DomainAgeDetector': '\uB3C4\uBA54\uC778 \uC5F0\uB839',
         'ContentAnalyzer': '\uCF58\uD150\uCE20 \uBD84\uC11D',
+        'KisaBlacklistDetector': 'KISA \uBE14\uB799\uB9AC\uC2A4\uD2B8',
         'LLMAnalyzer': 'AI \uC885\uD569 \uBD84\uC11D'
       };
 

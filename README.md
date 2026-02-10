@@ -13,6 +13,7 @@
   <img src="https://img.shields.io/badge/JavaScript-ES_Modules-F7DF1E?logo=javascript&logoColor=black" alt="JavaScript" />
   <img src="https://img.shields.io/badge/LLM-GLM_|_Gemini-8B5CF6" alt="LLM" />
   <img src="https://img.shields.io/badge/RAG-Local_JSON_DB-10B981" alt="RAG" />
+  <img src="https://img.shields.io/badge/KISA-Blacklist_27K-EF4444" alt="KISA Blacklist" />
   <img src="https://img.shields.io/badge/License-MIT-blue" alt="License" />
   <img src="https://img.shields.io/badge/Version-1.0.0-orange" alt="Version" />
 </p>
@@ -25,16 +26,17 @@ PhishGuard는 **LLM API + Prompt Engineering + RAG** 기술을 결합하여 피�
 
 ### 주요 기능
 
-| 기능                            | 설명                                                                                                                      |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| **실시간 피싱 감지**            | 사용자가 방문하는 웹사이트를 자동으로 분석하여 위험도를 평가합니다.                                                       |
-| **타이포스쿼팅 탐지**           | Levenshtein Distance, Jaro-Winkler 유사도, 동형문자(Homoglyph) 감지를 통해 유명 도메인을 위장한 피싱 도메인을 식별합니다. |
-| **프로토콜 보안 검사**          | HTTP/HTTPS 프로토콜 상태, Mixed Content, 민감 정보 입력 폼의 암호화 여부를 확인합니다.                                    |
-| **도메인 연령 분석**            | WHOIS/RDAP API를 활용하여 최근 등록된 신생 도메인을 탐지합니다.                                                           |
-| **콘텐츠 분석**                 | 긴급성/공포 유도 문구, 보상/당첨 사기 문구, 브랜드 위장, 의심스러운 입력 폼 등을 감지합니다.                              |
-| **정부기관 사칭 탐지**          | 법원, 검찰, 경찰 등 정부기관을 사칭하는 도메인 및 콘텐츠를 감지합니다. 한글 도메인(IDN) 피싱과 보이스피싱 연계 랜딩 페이지를 탐지합니다. |
-| **LLM 종합 판단**               | GLM/Gemini API를 활용하여 여러 감지 모듈의 결과를 종합적으로 분석합니다.                                                  |
-| **RAG 기반 피싱 패턴 매칭**     | 로컬 JSON DB에서 알려진 피싱 패턴 및 정규 도메인 정보를 검색하여 LLM 프롬프트에 컨텍스트로 제공합니다.                    |
+| 기능                        | 설명                                                                                                                                     |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| **실시간 피싱 감지**        | 사용자가 방문하는 웹사이트를 자동으로 분석하여 위험도를 평가합니다.                                                                      |
+| **타이포스쿼팅 탐지**       | Levenshtein Distance, Jaro-Winkler 유사도, 동형문자(Homoglyph) 감지를 통해 유명 도메인을 위장한 피싱 도메인을 식별합니다.                |
+| **프로토콜 보안 검사**      | HTTP/HTTPS 프로토콜 상태, Mixed Content, 민감 정보 입력 폼의 암호화 여부를 확인합니다.                                                   |
+| **도메인 연령 분석**        | WHOIS/RDAP API를 활용하여 최근 등록된 신생 도메인을 탐지합니다.                                                                          |
+| **콘텐츠 분석**             | 긴급성/공포 유도 문구, 보상/당첨 사기 문구, 브랜드 위장, 의심스러운 입력 폼 등을 감지합니다.                                             |
+| **정부기관 사칭 탐지**      | 법원, 검찰, 경찰 등 정부기관을 사칭하는 도메인 및 콘텐츠를 감지합니다. 한글 도메인(IDN) 피싱과 보이스피싱 연계 랜딩 페이지를 탐지합니다. |
+| **KISA 피싱 블랙리스트**    | 한국인터넷진흥원(KISA)의 피싱사이트 URL 데이터(27,582건)를 공공데이터포털 API로 동기화하여 알려진 피싱 사이트를 즉시 탐지합니다.         |
+| **LLM 종합 판단**           | GLM/Gemini API를 활용하여 여러 감지 모듈의 결과를 종합적으로 분석합니다.                                                                 |
+| **RAG 기반 피싱 패턴 매칭** | 로컬 JSON DB에서 알려진 피싱 패턴 및 정규 도메인 정보를 검색하여 LLM 프롬프트에 컨텍스트로 제공합니다.                                   |
 
 ---
 
@@ -56,6 +58,7 @@ flowchart TB
             Proto["ProtocolDetector<br/>weight: 0.15"]
             Age["DomainAgeDetector<br/>weight: 0.15"]
             Content["ContentAnalyzer<br/>weight: 0.2"]
+            KISA["KisaBlacklistDetector<br/>weight: 0.25"]
             LLM["LLMAnalyzer<br/>weight: 0.3"]
         end
 
@@ -77,6 +80,7 @@ flowchart TB
         GLM["GLM API<br/>(glm-4-flash)"]
         Gemini["Gemini API<br/>(gemini-2.0-flash)"]
         WHOIS["WHOIS / RDAP API"]
+        DataGoKr["data.go.kr API<br/>(KISA 피싱 DB)"]
     end
 
     Browser -->|"사이트 방문"| CS
@@ -93,13 +97,15 @@ flowchart TB
     Popup -->|"결과 요청"| BG
     Popup -->|"설정 저장/로드"| Storage
     BG -->|"결과 캐싱"| Storage
+    KISA -->|"블랙리스트 조회"| Storage
+    BG -->|"주기적 동기화"| DataGoKr
 ```
 
 ### 분석 흐름 요약
 
 1. 사용자가 웹사이트에 방문하면 **Content Script**가 DOM 정보(제목, 폼, 텍스트, 외부 리소스 등)를 수집합니다.
 2. 수집된 정보는 **Background Service Worker**로 전달되며, 화이트리스트 및 캐시를 확인합니다.
-3. **DetectorManager**가 등록된 감지 모듈(Typosquat, Protocol, DomainAge, Content)을 **병렬**로 실행합니다.
+3. **DetectorManager**가 등록된 감지 모듈(Typosquat, Protocol, DomainAge, Content, KISA Blacklist)을 **병렬**로 실행합니다.
 4. 1차 종합 점수가 30~80점 사이인 경우, **LLMAnalyzer**가 RAG Engine의 컨텍스트와 함께 LLM API를 호출합니다.
 5. 각 모듈의 결과를 **가중 평균**으로 종합하여 최종 위험도(0~100)와 위험 등급(safe/warning/danger)을 산출합니다.
 6. 결과는 Content Script로 전달되어 **Shadow DOM 기반 Alert Banner**로 사용자에게 경고합니다.
@@ -141,13 +147,14 @@ flowchart TB
 
 ## 4. 감지 모듈
 
-| 모듈명                | 파일                            | 가중치 | 역할                                                                                                                |
-| --------------------- | ------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------- |
-| **TyposquatDetector** | `detectors/domain-typosquat.js` | 0.30   | 유명 도메인과의 문자열 유사도 분석, 동형문자(Homoglyph) 감지, 서브도메인 위장 탐지, 하이픈 삽입 감지, TLD 변경 감지 |
-| **ProtocolDetector**  | `detectors/protocol-check.js`   | 0.15   | HTTP/HTTPS 프로토콜 확인, Mixed Content 감지, HTTP 환경의 민감 정보 입력 폼 경고                                    |
-| **DomainAgeDetector** | `detectors/domain-age.js`       | 0.15   | WHOIS/RDAP API를 통한 도메인 등록일 조회, 신생 도메인(30일 미만) 고위험 판정                                        |
-| **ContentAnalyzer**   | `detectors/content-analysis.js` | 0.20   | 긴급성/공포 유도 문구, 보상/당첨 유도 문구, 의심스러운 입력 폼, 브랜드/정부기관 위장(타이틀/파비콘), 외부 로고 도용 감지 |
-| **LLMAnalyzer**       | `detectors/llm-analysis.js`     | 0.30   | 다른 모듈의 분석 결과 + RAG 컨텍스트를 종합하여 LLM에 최종 판단 요청 (1차 점수 30~80 구간에서만 호출)               |
+| 모듈명                    | 파일                            | 가중치 | 역할                                                                                                                     |
+| ------------------------- | ------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------ |
+| **TyposquatDetector**     | `detectors/domain-typosquat.js` | 0.30   | 유명 도메인과의 문자열 유사도 분석, 동형문자(Homoglyph) 감지, 서브도메인 위장 탐지, 하이픈 삽입 감지, TLD 변경 감지      |
+| **ProtocolDetector**      | `detectors/protocol-check.js`   | 0.15   | HTTP/HTTPS 프로토콜 확인, Mixed Content 감지, HTTP 환경의 민감 정보 입력 폼 경고                                         |
+| **DomainAgeDetector**     | `detectors/domain-age.js`       | 0.15   | WHOIS/RDAP API를 통한 도메인 등록일 조회, 신생 도메인(30일 미만) 고위험 판정                                             |
+| **ContentAnalyzer**       | `detectors/content-analysis.js` | 0.20   | 긴급성/공포 유도 문구, 보상/당첨 유도 문구, 의심스러운 입력 폼, 브랜드/정부기관 위장(타이틀/파비콘), 외부 로고 도용 감지 |
+| **KisaBlacklistDetector** | `detectors/kisa-blacklist.js`   | 0.25   | KISA 피싱사이트 URL DB(27,582건)와 방문 URL을 O(1) 매칭하여 알려진 피싱 사이트 즉시 탐지 (매칭 시 risk: 100)             |
+| **LLMAnalyzer**           | `detectors/llm-analysis.js`     | 0.30   | 다른 모듈의 분석 결과 + RAG 컨텍스트를 종합하여 LLM에 최종 판단 요청 (1차 점수 30~80 구간에서만 호출)                    |
 
 ### 위험도 판정 기준
 
@@ -177,24 +184,56 @@ PhishGuard는 **GLM (glm-4-flash)** 과 **Google Gemini (gemini-2.0-flash)** 두
 
 ---
 
-## 6. 기술 스택
+## 6. KISA 블랙리스트 설정 방법
 
-| 카테고리           | 기술                                                               |
-| ------------------ | ------------------------------------------------------------------ |
-| **플랫폼**         | Chrome Extension Manifest V3                                       |
-| **언어**           | Vanilla JavaScript (ES Modules)                                    |
-| **UI 격리**        | Shadow DOM (Alert Banner)                                          |
-| **LLM API**        | GLM API (glm-4.7-flash) / Gemini API (gemini-2.5-flash-lite)       |
-| **RAG**            | Local JSON DB (`known-domains.json`, `phishing-patterns.json`)     |
-| **문자열 유사도**  | Levenshtein Distance, Jaro-Winkler Similarity                      |
-| **피싱 기법 탐지** | Homoglyph Detection, Subdomain Impersonation, Typosquatting        |
-| **도메인 정보**    | WHOIS API (ip2whois), RDAP API                                     |
-| **상태 관리**      | `chrome.storage.sync` (설정), `chrome.storage.session` (분석 결과) |
-| **캐싱**           | In-Memory Cache + chrome.storage.local (도메인 연령)               |
+PhishGuard는 **한국인터넷진흥원(KISA)**에서 제공하는 피싱사이트 URL 데이터(27,582건)를 [공공데이터포털(data.go.kr)](https://www.data.go.kr/data/15109780/openapi.do) Open API를 통해 동기화합니다.
+
+### API 키 발급
+
+1. [공공데이터포털](https://www.data.go.kr)에 회원가입 및 로그인합니다.
+2. [KISA 피싱사이트 URL 데이터](https://www.data.go.kr/data/15109780/openapi.do) 페이지에서 **활용신청**을 합니다.
+3. 승인 후 **마이페이지 > 오픈API > 인증키**에서 **일반 인증키(Encoding)**를 복사합니다.
+
+### 확장 프로그램 설정
+
+1. 툴바에서 PhishGuard 아이콘을 클릭하여 팝업을 엽니다.
+2. 팝업 하단의 **설정** 버튼을 클릭합니다.
+3. **KISA 블랙리스트** 토글을 활성화합니다.
+4. **공공데이터포털 API 키** 입력란에 발급받은 인증키를 입력합니다.
+5. **KISA 키 저장** 버튼을 클릭합니다.
+6. 자동으로 전체 동기화가 시작되며, 완료까지 약 1~2분이 소요됩니다.
+
+### 동기화 방식
+
+| 유형            | 주기       | 설명                                                            |
+| --------------- | ---------- | --------------------------------------------------------------- |
+| **전체 동기화** | 최초 1회   | API 키 저장 시 전체 27,582건을 1,000건 단위로 순차 다운로드     |
+| **증분 동기화** | 24시간마다 | `chrome.alarms`로 최근 데이터 5페이지를 가져와 기존 목록에 병합 |
+
+> **참고**: 블랙리스트 데이터(~1MB)는 `chrome.storage.local`에 저장되며, 서비스워커가 종료되더라도 동기화 상태가 보존됩니다. 블랙리스트에 매칭되면 해당 사이트는 **즉시 위험(risk: 100)**으로 판정됩니다.
 
 ---
 
-## 7. 프로젝트 구조
+## 7. 기술 스택
+
+| 카테고리           | 기술                                                                  |
+| ------------------ | --------------------------------------------------------------------- |
+| **플랫폼**         | Chrome Extension Manifest V3                                          |
+| **언어**           | Vanilla JavaScript (ES Modules)                                       |
+| **UI 격리**        | Shadow DOM (Alert Banner)                                             |
+| **LLM API**        | GLM API (glm-4.7-flash) / Gemini API (gemini-2.5-flash-lite)          |
+| **RAG**            | Local JSON DB (`known-domains.json`, `phishing-patterns.json`)        |
+| **문자열 유사도**  | Levenshtein Distance, Jaro-Winkler Similarity                         |
+| **피싱 기법 탐지** | Homoglyph Detection, Subdomain Impersonation, Typosquatting           |
+| **도메인 정보**    | WHOIS API (ip2whois), RDAP API                                        |
+| **피싱 DB**        | KISA 피싱사이트 URL DB (공공데이터포털 Open API, 27,582건)            |
+| **상태 관리**      | `chrome.storage.sync` (설정), `chrome.storage.session` (분석 결과)    |
+| **캐싱**           | In-Memory Cache + chrome.storage.local (도메인 연령, KISA 블랙리스트) |
+| **주기적 작업**    | `chrome.alarms` API (24시간 주기 블랙리스트 동기화)                   |
+
+---
+
+## 8. 프로젝트 구조
 
 ```
 phishguard/
@@ -206,7 +245,8 @@ phishguard/
 │   └── icon-128.png               # 익스텐션 아이콘 (128x128)
 │
 ├── background/
-│   └── service-worker.js          # 백그라운드 서비스 워커 (분석 오케스트레이션)
+│   ├── service-worker.js          # 백그라운드 서비스 워커 (분석 오케스트레이션)
+│   └── kisa-sync.js               # KISA 블랙리스트 동기화 엔진
 │
 ├── content/
 │   └── content-script.js          # 콘텐츠 스크립트 (DOM 수집 + Alert Banner)
@@ -217,6 +257,7 @@ phishguard/
 │   ├── protocol-check.js          # 프로토콜 보안 검사 모듈
 │   ├── domain-age.js              # 도메인 연령 분석 모듈
 │   ├── content-analysis.js        # 콘텐츠 분석 모듈
+│   ├── kisa-blacklist.js          # KISA 블랙리스트 감지 모듈
 │   └── llm-analysis.js            # LLM 종합 분석 모듈
 │
 ├── llm/
@@ -251,7 +292,7 @@ phishguard/
 
 ---
 
-## 8. 향후 개선 계획
+## 9. 향후 개선 계획
 
 - **실시간 피싱 DB 업데이트**: 외부 피싱 DB(PhishTank, OpenPhish 등)와 연동하여 최신 피싱 도메인 정보를 자동으로 업데이트
 - **사용자 신고 기반 커뮤니티 DB**: 사용자가 직접 피싱 사이트를 신고하고 공유하는 커뮤니티 기반 데이터베이스 구축
@@ -262,7 +303,7 @@ phishguard/
 
 ---
 
-## 9. 라이선스
+## 10. 라이선스
 
 이 프로젝트는 [MIT License](https://opensource.org/licenses/MIT)에 따라 라이선스가 부여됩니다.
 

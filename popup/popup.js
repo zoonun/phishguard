@@ -13,6 +13,7 @@
     ProtocolDetector: "프로토콜 보안",
     DomainAgeDetector: "도메인 연령",
     ContentAnalyzer: "콘텐츠 분석",
+    KisaBlacklistDetector: "KISA 블랙리스트",
     LLMAnalyzer: "AI 종합 분석",
   };
 
@@ -67,6 +68,13 @@
   var settingsLlmToggle = document.getElementById("settings-llm-toggle");
   var llmSettingsGroup = document.getElementById("llm-settings-group");
 
+  // KISA elements
+  var settingsKisaToggle = document.getElementById("settings-kisa-toggle");
+  var kisaSettingsGroup = document.getElementById("kisa-settings-group");
+  var kisaApiKeyInput = document.getElementById("kisa-api-key");
+  var kisaSaveBtn = document.getElementById("kisa-save");
+  var kisaSyncStatus = document.getElementById("kisa-sync-status");
+
   /* ====== Initialization ====== */
 
   document.addEventListener("DOMContentLoaded", init);
@@ -108,6 +116,12 @@
     settingsLlmToggle.addEventListener("change", function () {
       setLlmEnabled(this.checked);
     });
+
+    // KISA on/off toggle + save
+    settingsKisaToggle.addEventListener("change", function () {
+      setKisaEnabled(this.checked);
+    });
+    kisaSaveBtn.addEventListener("click", saveKisaSettings);
   }
 
   /* ====== Active Tab & Analysis ====== */
@@ -353,18 +367,28 @@
   /* ====== Toggle Controls ====== */
 
   function loadToggles() {
-    chrome.storage.sync.get(["extEnabled", "llmEnabled"], function (data) {
-      // extEnabled defaults to true
-      var ext = data.extEnabled !== false;
-      var llm = !!data.llmEnabled;
+    chrome.storage.sync.get(
+      ["extEnabled", "llmEnabled", "kisaEnabled", "kisaApiKey"],
+      function (data) {
+        // extEnabled defaults to true
+        var ext = data.extEnabled !== false;
+        var llm = !!data.llmEnabled;
+        var kisa = !!data.kisaEnabled;
 
-      extToggle.checked = ext;
-      settingsExtToggle.checked = ext;
-      applyExtState(ext);
+        extToggle.checked = ext;
+        settingsExtToggle.checked = ext;
+        applyExtState(ext);
 
-      settingsLlmToggle.checked = llm;
-      applyLlmState(llm);
-    });
+        settingsLlmToggle.checked = llm;
+        applyLlmState(llm);
+
+        settingsKisaToggle.checked = kisa;
+        applyKisaState(kisa);
+        if (data.kisaApiKey) {
+          kisaApiKeyInput.value = data.kisaApiKey;
+        }
+      },
+    );
   }
 
   function setExtEnabled(enabled) {
@@ -416,6 +440,172 @@
     } else {
       llmSettingsGroup.classList.add("llm-settings-group--hidden");
     }
+  }
+
+  /* ====== KISA Blacklist Controls ====== */
+
+  function setKisaEnabled(enabled) {
+    settingsKisaToggle.checked = enabled;
+    chrome.storage.sync.set({ kisaEnabled: enabled });
+
+    if (!enabled) {
+      chrome.storage.sync.remove(["kisaApiKey"], function () {
+        if (chrome.runtime.lastError) {
+          /* noop */
+        }
+      });
+      kisaApiKeyInput.value = "";
+      showStatus("KISA 블랙리스트가 비활성화되었습니다.", "success");
+    }
+
+    applyKisaState(enabled);
+  }
+
+  function applyKisaState(enabled) {
+    if (enabled) {
+      kisaSettingsGroup.classList.remove("kisa-settings-group--hidden");
+      loadKisaSyncStatus();
+    } else {
+      kisaSettingsGroup.classList.add("kisa-settings-group--hidden");
+    }
+  }
+
+  function saveKisaSettings() {
+    var apiKey = kisaApiKeyInput.value.trim();
+    if (!apiKey) {
+      showStatus("API 키를 입력해주세요.", "error");
+      return;
+    }
+
+    kisaSaveBtn.disabled = true;
+    kisaSaveBtn.textContent = "키 검증 중...";
+    showStatus("API 키를 검증하고 있습니다...", "success");
+
+    chrome.runtime.sendMessage(
+      { type: "VERIFY_KISA_KEY", apiKey: apiKey },
+      function (response) {
+        kisaSaveBtn.disabled = false;
+        kisaSaveBtn.textContent = "KISA 키 저장";
+
+        if (chrome.runtime.lastError) {
+          showStatus("검증 실패: 백그라운드 연결 오류", "error");
+          return;
+        }
+
+        if (!response || !response.valid) {
+          showStatus(
+            response?.error || "API 키 검증에 실패했습니다.",
+            "error",
+          );
+          return;
+        }
+
+        chrome.storage.sync.set(
+          { kisaApiKey: apiKey, kisaEnabled: true },
+          function () {
+            if (chrome.runtime.lastError) {
+              showStatus(
+                "저장 실패: " + chrome.runtime.lastError.message,
+                "error",
+              );
+              return;
+            }
+
+            showStatus(
+              "API 키가 검증되어 저장되었습니다. 동기화를 시작합니다...",
+              "success",
+            );
+
+            // 동기화 트리거
+            chrome.runtime.sendMessage(
+              { type: "KISA_TRIGGER_SYNC" },
+              function () {
+                if (chrome.runtime.lastError) return;
+                // 동기화 상태 폴링
+                pollKisaSyncStatus();
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  function loadKisaSyncStatus() {
+    chrome.runtime.sendMessage(
+      { type: "KISA_SYNC_STATUS" },
+      function (response) {
+        if (chrome.runtime.lastError || !response) return;
+        renderKisaSyncStatus(response);
+      },
+    );
+  }
+
+  function renderKisaSyncStatus(status) {
+    if (!status || !kisaSyncStatus) return;
+
+    var state = status.syncState || {};
+    var count = status.blacklistCount || 0;
+    var lastSync = status.lastSync;
+    var html = "";
+
+    if (state.status === "syncing") {
+      var progress = state.currentPage && state.totalPages
+        ? " (" + state.currentPage + "/" + state.totalPages + ")"
+        : "";
+      html =
+        '<span class="kisa-sync-status--syncing">동기화 중...' +
+        progress +
+        "</span>";
+    } else if (count > 0) {
+      var timeStr = lastSync
+        ? new Date(lastSync).toLocaleString("ko-KR")
+        : "-";
+      html =
+        '<span class="kisa-sync-status--ready">등록 도메인: ' +
+        count.toLocaleString() +
+        "건</span>" +
+        '<br><span style="color:#5a5a7a">마지막 동기화: ' +
+        timeStr +
+        "</span>";
+    } else {
+      html = '<span style="color:#5a5a7a">데이터 없음</span>';
+    }
+
+    kisaSyncStatus.innerHTML = html;
+  }
+
+  function pollKisaSyncStatus() {
+    var attempts = 0;
+    var maxAttempts = 60;
+    var interval = setInterval(function () {
+      attempts++;
+      if (attempts >= maxAttempts) {
+        clearInterval(interval);
+        return;
+      }
+      chrome.runtime.sendMessage(
+        { type: "KISA_SYNC_STATUS" },
+        function (response) {
+          if (chrome.runtime.lastError || !response) return;
+          renderKisaSyncStatus(response);
+          if (
+            response.syncState &&
+            response.syncState.status !== "syncing"
+          ) {
+            clearInterval(interval);
+            if (response.blacklistCount > 0) {
+              showStatus(
+                "KISA 블랙리스트 동기화 완료 (" +
+                  response.blacklistCount.toLocaleString() +
+                  "건)",
+                "success",
+              );
+            }
+          }
+        },
+      );
+    }, 2000);
   }
 
   /* ====== Settings Panel ====== */
@@ -473,19 +663,26 @@
 
   function loadSettings() {
     chrome.storage.sync.get(
-      ["llmProvider", "apiKey", "extEnabled", "llmEnabled"],
+      ["llmProvider", "apiKey", "extEnabled", "llmEnabled", "kisaEnabled", "kisaApiKey"],
       function (data) {
         // Sync toggles
         var ext = data.extEnabled !== false;
         var llm = !!data.llmEnabled;
+        var kisa = !!data.kisaEnabled;
         extToggle.checked = ext;
         settingsExtToggle.checked = ext;
         settingsLlmToggle.checked = llm;
         applyLlmState(llm);
 
+        settingsKisaToggle.checked = kisa;
+        applyKisaState(kisa);
+
         selectProvider(data.llmProvider || "gemini");
         if (data.apiKey) {
           apiKeyInput.value = data.apiKey;
+        }
+        if (data.kisaApiKey) {
+          kisaApiKeyInput.value = data.kisaApiKey;
         }
       },
     );
