@@ -489,6 +489,12 @@ body::-webkit-scrollbar-thumb:hover {
   margin-top: 0;
 }
 
+.settings__hint {
+  font-size: 11px;
+  color: #5a5a7a;
+  margin-bottom: 6px;
+}
+
 .settings__select,
 .settings__input {
   width: 100%;
