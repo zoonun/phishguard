@@ -199,7 +199,14 @@ const TyposquatDetector = {
 
       // 브랜드명이 서브도메인에 있는 경우 (naver.evil-domain.com)
       const brandName = brandDomain.split('.')[0];
-      if (parts.length > 2 && parts[0] === brandName && !hostname.endsWith(brandDomain)) {
+      const genericSubdomains = [
+        'www', 'm', 'mail', 'blog', 'shop', 'store', 'pay', 'login',
+        'auth', 'api', 'app', 'web', 'map', 'maps', 'news', 'search',
+        'tv', 'music', 'open', 'dev', 'story', 'cafe', 'card', 'order',
+        'my', 'id', 'help', 'support', 'about', 'admin', 'portal',
+        'cloud', 'drive', 'docs', 'meet', 'teams', 'chat'
+      ];
+      if (parts.length > 2 && parts[0] === brandName && !hostname.endsWith(brandDomain) && !genericSubdomains.includes(brandName)) {
         return {
           risk: 90,
           confidence: 0.9,
