@@ -18,6 +18,10 @@
   <img src="https://img.shields.io/badge/Version-1.0.0-orange" alt="Version" />
 </p>
 
+<p align="center">
+  <img src="assets/phishguard_1280_800.png" alt="PhishGuard Screenshot" width="720" />
+</p>
+
 ---
 
 ## 1. PhishGuard 소개

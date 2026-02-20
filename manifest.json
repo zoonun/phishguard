@@ -8,7 +8,7 @@
     "48": "assets/icon-48.png",
     "128": "assets/icon-128.png"
   },
-  "permissions": ["activeTab", "storage", "tabs", "scripting", "alarms"],
+  "permissions": ["activeTab", "storage", "tabs", "alarms"],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background/service-worker.js",
